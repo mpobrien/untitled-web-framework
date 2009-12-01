@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <script src="/static/jquery-1.3.2.min.js" language="Javascript"></script>
+        <style>
+            body{
+                font-family: Georgia;
+            }
+
+            div.content{
+                width: 400px;
+                line-height: 24px;
+                font-size: 16px;
+            }
+            .hov{
+                background-color: yellow;
+            }
+            #main{
+                display:none;
+            }
+        </style>
+        <script language="Javascript">
+
+            function getDefinition(word){
+                $.getJSON('/ajax', {'method':'define_word', 'word':word}, function(json){alert(json.results)})
+            }
+
+            $(document).ready( function(){
+                                    content = $('#main').text()
+                                    words = content.split(/\s/)
+                                    for( w in words ){
+                                        $('#new').append('<span class="h">' + words[w] + '</span> ')
+                                    }
+                                    $('.h').hover( function(){ $(this).addClass("hov") }, function(){$(this).removeClass("hov") } )
+                                    $('.h').click( function(){ getDefinition($(this).text()) })
+                                } )
+
+        </script>
+    </head>
+
+    <body>
+        <div class="content">
+            <p id="main">
+            La extracción líquido-líquido, también conocida extracción de solvente, es un proceso químico empleado para separar componentes de una mezcla no homogénea mediante la relación de sus concentraciones en dos fases liquidas inmiscibles.
+
+            Este proceso también se le conoce como extracción liquida o extracción con disolvente; sin embargo, este ultimo termino puede prestarse a confusión, porque también se aplica a la lixiviación de una sustancia soluble contenida en un solido. Ya que la extracción líquido-líquido involucra transferencia de masa de una fase líquida a una segunda fase líquida inmiscible, el proceso se puede realizar en varias formas. El ejemplo más sencillo involucra la transferencia de una mezcla de dos compuestos a una segunda fase liquida inmiscible. Un ejemplo es la extracción líquido-líquido de una impureza contenida en el agua de desperdicio mediante un disolvente orgánico. Esto es similar al agotamiento o absorción en la que se transfiere masa de una fase a otra.
+
+            La transferencia del componente disuelto (soluto) se puede mejorar por la adición de agentes saladores a la mezcla de alimentación o la adición de agentes "formadores de complejos" al disolvente de extracción. En algunos casos se puede utilizar una reacción química para mejorar la transferencia como por ejemplo, el empleo de una solución caustica acuosa (como una solución de hidróxido de sodio), para extraer fenoles de una corriente de hidrocarburos. Un concepto más complicado de la extracción líquido-líquido se utiliza en un proceso para separar completamente dos solutos. Un disolvente primario de extracción se utiliza para extraer uno de los solutos presentes en una mezcla (en forma similar al agotamiento en destilación) y un disolvente lavador se utiliza para depurar el extracto libre del segundo soluto (semejante a la rectificación en destilación).
+            La extracción líquido-líquido, también conocida extracción de solvente, es un proceso químico empleado para separar componentes de una mezcla no homogénea mediante la relación de sus concentraciones en dos fases liquidas inmiscibles.
+
+            </p>
+            <p id="new">
+                
+            </p>
+        </div>
+    </body>
+</html>
+
