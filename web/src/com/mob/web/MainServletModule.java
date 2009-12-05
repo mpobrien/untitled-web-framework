@@ -15,6 +15,10 @@ import java.lang.reflect.*;
 
 public class MainServletModule extends ServletModule {
 
+	public MainServletModule(){
+		System.out.println("main servlet module");
+	}
+
      protected void configurePreFilters() {
          //filter("/*").through(MyPreFilter.class);
      }

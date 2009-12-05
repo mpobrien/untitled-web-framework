@@ -50,4 +50,8 @@ public class AnnotatedUrlMapper implements UrlMapper{
 		return null; //no match found.
 	}//}}}
 
+    public String toString(){
+		return "AnnotatedUrlMapper -mappings: " + mappings.toString();
+	}
+
 }

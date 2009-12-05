@@ -16,6 +16,7 @@ class SiteFilter implements Filter {
 
   	@Inject
 	public SiteFilter(UrlMapper mapper, Injector injector){
+		log.info("Creating site filter.");
 		this.mapper = mapper;
 		this.injector = injector;
 	}
