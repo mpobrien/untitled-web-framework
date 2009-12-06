@@ -24,6 +24,7 @@ public class MainServletModule extends ServletModule {
 
 	@Override
     protected void configureServlets() {
+		serve("/static/*").with(StaticServlet.class);
  		filter("/*").through(SiteFilter.class);
     }
 

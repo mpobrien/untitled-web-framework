@@ -50,6 +50,7 @@ class SiteFilter implements Filter {
 				result.writeResponse(request, response);
 			}
 		}
+		filterChain.doFilter(request, response);
 	}
 
     public void destroy() { }

@@ -10,6 +10,7 @@ mkdir -p $projectname/tools
 mkdir -p $projectname/src/$projectname/ctrlrs
 mkdir -p $projectname/src/$projectname/modules
 mkdir -p $projectname/WebContent/WEB-INF/
+mkdir -p $projectname/WebContent/static
 mkdir -p $projectname/templates
 cp $global_settings_dir/lib/*.jar $projectname/lib
 cp $global_settings_dir/build.xml $projectname
