@@ -13,11 +13,13 @@ import javax.servlet.http.*;
 import org.apache.log4j.Logger;
 
 public @Singleton class MyServletContextListener extends GuiceServletContextListener {
-	private static Logger log = Logger.getLogger(AnnotatedUrlMapper.class);
+
+	private static Logger log = Logger.getLogger(MyServletContextListener.class);
 
 	//@Override
 	protected Injector getInjector() {
-		Injector injector = Guice.createInjector( new MainServletModule(), new AppConfigModule() );
+		Injector injector = Guice.createInjector( new MainServletModule(),
+			new AppConfigModule() );
 		return injector;
 	}
 

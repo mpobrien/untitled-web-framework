@@ -23,8 +23,9 @@ public class AppConfigModule extends AbstractModule {
 	private static final String SERVERPORT_KEY = "server.port";
 	private static final String SERVERDATA_KEY = "server.data";
 	private final Properties propsFile;
+	private List<Package> packages;
 
-	public AppConfigModule(){
+	public AppConfigModule(Package... pkgs){
 		// Load settings from the default location
 		Properties p = new Properties();
 		try{
@@ -34,12 +35,14 @@ public class AppConfigModule extends AbstractModule {
 			e.printStackTrace();
 		}
 		this.propsFile = p;
+		this.packages = Lists.newArrayList(pkgs);
 	}
 
-	public AppConfigModule(File propertiesFile){
+	public AppConfigModule(File propertiesFile, Package... pkgs){
 		this.propsFile = new Properties();
 		FileInputStream fis = null;
 		try{
+			fis = new FileInputStream(propertiesFile);
 			this.propsFile.load(fis);    
 		}catch(Exception e){
 			//TODO: fix
@@ -49,6 +52,7 @@ public class AppConfigModule extends AbstractModule {
 				try{ fis.close(); }catch(Exception e){}
 			}
 		}
+		this.packages = Lists.newArrayList(pkgs);
 	}
 
 	public AppConfigModule(String propertiesFile){
@@ -56,32 +60,28 @@ public class AppConfigModule extends AbstractModule {
 	}
 
 	public void configure() {                           
-		//Load template settings
-		Map<String,String> templateSettings = Maps.filterKeys( 
-												Maps.fromProperties(this.propsFile),
-												C.prefixFilter( TEMPLATE_PREFIX ) ); 
-		Names.bindProperties( binder(), templateSettings );
+
+		//Template Settings//////////
 		Configuration config = new Configuration();
+		try{
+			config.setDirectoryForTemplateLoading( new File( this.propsFile.getProperty("template.dir" ) ) );
+		}catch(Exception e){
+			e.printStackTrace();
+			log.warn("couldn't load template directory");
+		}
 		bind(Configuration.class).toInstance( config );
 
-		//Load Database settings
-		Map<String,String> dbSettings = Maps.filterKeys(
-											Maps.fromProperties(this.propsFile), 
-											C.prefixFilter( DB_PREFIX ) );
+		//Database settings/////////////
+		Map<String,String> dbSettings = Maps.filterKeys( Maps.fromProperties(this.propsFile), C.prefixFilter( DB_PREFIX ) );
 		Names.bindProperties( binder(), dbSettings );
 		bind(ConnectionProvider.class).to(SimpleConnectionProvider.class);
-
-		//Load Url mapping settings
-		String controllerPackages = propsFile.getProperty( URLMAP_KEY );
-		List<Package> packages = loadPackages( parsePackageList( controllerPackages ) );
-		bind(new TypeLiteral<List<Package>>() {}).annotatedWith( Names.named("controller.packages") ).toInstance( packages );
-		
-		
 
 		//Server settings:
 		bind(String.class).annotatedWith(Names.named("server.port")).toInstance(this.propsFile.getProperty(SERVERPORT_KEY));
 		bind(String.class).annotatedWith(Names.named("server.data")).toInstance(this.propsFile.getProperty(SERVERDATA_KEY));
 
+		// Url Mappings
+		bind(new TypeLiteral<List<Package>>() {}).annotatedWith( Names.named("controller.packages") ).toInstance( this.packages );
 
 	}
 
@@ -89,45 +89,12 @@ public class AppConfigModule extends AbstractModule {
 		Properties properties = new Properties();
 		ClassLoader loader = MyServletContextListener.class.getClassLoader();
 		URL url = loader.getResource("settings.properties");
+		if( url == null ){
+			log.warn("couldn't find the settings.properties file!");
+			return properties;
+		}
 		properties.load(url.openStream());
 		return properties;
-	}
-
-    private static List<String> parsePackageList( String commaDelimitedPackages){
-		if( commaDelimitedPackages == null || commaDelimitedPackages.trim().equals("") ){
-			return new ArrayList<String>(0);
-		}else{
-			String[] packages = commaDelimitedPackages.split(",");
-			if( packages == null || packages.length == 0 ){
-				return new ArrayList<String>(0);
-			}else{
-				List<String> returnVal = new ArrayList<String>();
-				for( int i=0; i < packages.length; i++ ){
-					returnVal.add( packages[ i ] .trim() );
-				}
-				log.info(returnVal);
-				return returnVal;
-			}
-		}
-	}
-
-	private static List<Package> loadPackages( List<String> packageNames ){
-		List<Package> packages = new ArrayList<Package>();
-		for( String packageName : packageNames ){
-			try{
-				log.info( AppConfigModule.class.getClassLoader().getResources(packageName + ".*") );
-			}catch(Exception e){
-				//TODO fix
-				e.printStackTrace();
-			}
-			Package p = Package.getPackage( packageName );
-			if( p != null ){
-				packages.add( p );
-			}else{
-				log.warn("Couldn't find package: " + packageName );
-			}
-		}
-		return packages;
 	}
 
 }

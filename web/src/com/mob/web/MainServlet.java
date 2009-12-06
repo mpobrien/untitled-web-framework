@@ -15,13 +15,8 @@ import java.lang.reflect.*;
 @Singleton
 public class MainServlet extends HttpServlet {
 
-	public MainServlet(){
-		System.out.println("main servlet");
-	}
-
     public void doGet (HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		String requestUri = req.getRequestURI();
-		System.out.println( requestUri + " request uri");
+
     }
 
 }

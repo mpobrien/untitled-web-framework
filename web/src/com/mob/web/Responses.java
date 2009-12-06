@@ -11,7 +11,7 @@ public class Responses{
 	@Inject
 	public Responses(Configuration config){//{{{
 		this.config = config;
-		this.config.setObjectWrapper( new DefaultObjectWrapper() );
+		this.config.setObjectWrapper( ObjectWrapper.BEANS_WRAPPER );
 	}//}}}
 
 	public static RedirectResponse redirect(String redirectUrl){//{{{

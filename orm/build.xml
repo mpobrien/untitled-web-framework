@@ -1,10 +1,17 @@
-<project name="!!!PROJECT_NAME!!!" default="build" basedir=".">
+<project name="jigli" default="build" basedir=".">
     <target name="init">
         <property name="src.dir" value="src"/>
         <property name="lib.dir" value="lib"/>
-        <property name="classes.dir" value="WebContent/WEB-INF/classes"/>
-        <property name="conf.dir" value="conf"/>
+        <property name="classes.dir" value="build"/>
         <property name="dist.dir" value="dist"/>
+    </target>
+    <target name="tags">
+        <exec executable="ctags">
+            <arg line="--recurse=yes"/>
+            <arg line="--links=yes"/>
+            <arg line="--java-types=cimp"/>
+            <arg line="-f .tags ./src"/>
+        </exec>
     </target>
     <target name="clean" depends="init">
         <deltree dir="${classes.dir}"/>
@@ -14,25 +21,21 @@
         <mkdir dir="${classes.dir}"/>
         <mkdir dir="dist"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true">
+            <compilerarg value="-Xlint"/>
             <classpath>
                 <fileset dir="${lib.dir}">
                     <include name="**/*.jar"/>
                 </fileset>
             </classpath>
         </javac>
+        <!--
+        <copy todir="${classes.dir}/">
+            <fileset dir="${resources.dir}"/>
+        </copy>-->
     </target>
     <target name="compile" depends="clean, build"> </target>
 
-    <!--target name="runserver">
-        <java classname="com.mob.bootstrap.Jetty">
-             <classpath>
-                <fileset dir="${lib.dir}">
-                    <include name="**/*.jar"/>
-                </fileset>
-                <pathelement path="${classes.dir}"/>
-                <pathelement path="${conf.dir}"/>
-             </classpath>
-            </java>
-    </target-->
-
+    <target name="dist" depends="clean, build"> 
+      <jar destfile="${dist.dir}/orm.jar" basedir="${classes.dir}" excludes="**/Test.class"/>
+    </target>
 </project>

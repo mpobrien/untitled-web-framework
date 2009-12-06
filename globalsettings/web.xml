@@ -6,16 +6,6 @@
     <display-name>Application name</display-name>
     <description>description</description> 
 
-    <servlet>
-      <servlet-name>MainServlet</servlet-name>
-      <description>description of it</description>
-      <servlet-class>com.mob.web.MainServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-      <servlet-name>MainServlet</servlet-name>
-      <url-pattern>/*</url-pattern>
-    </servlet-mapping>
 
     <session-config>
       <session-timeout>30</session-timeout> 

@@ -16,7 +16,6 @@ class SiteFilter implements Filter {
 
   	@Inject
 	public SiteFilter(UrlMapper mapper, Injector injector){
-		log.info("Creating site filter.");
 		this.mapper = mapper;
 		this.injector = injector;
 	}
@@ -28,7 +27,7 @@ class SiteFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		String requestUri = request.getRequestURI();
-		log.debug(request.getMethod() + ": " + requestUri );
+		log.info(request.getMethod() + ": " + requestUri );
 		ControllerRequest controlRequest = this.mapper.matchUrl( requestUri ); 
 		if( controlRequest != null ){
 			Class controllerClass = controlRequest.getControllerClass();
