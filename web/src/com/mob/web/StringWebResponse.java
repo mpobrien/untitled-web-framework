@@ -10,8 +10,9 @@ public class StringWebResponse implements WebResponse{
 		this.outputText = outputText;
 	}
 
-	public void writeResponse(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public boolean writeResponse(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		response.getWriter().write( outputText != null ? outputText : "" );
+		return false;
 	}
 
 }

@@ -22,10 +22,7 @@ public class TemplateResponse implements WebResponse{
 		this.context = new HashMap();;
 	}
 
-	public void writeResponse(HttpServletRequest request, HttpServletResponse response) throws IOException{
-// 		this.config = config;
-// 		this.config.setObjectWrapper( new DefaultObjectWrapper() );
-// 		Template temp = this.config.getTemplate(templateName);  
+	public boolean writeResponse(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		Writer out = new OutputStreamWriter(System.out);
 		try{
 			this.template.process(this.context, response.getWriter());
@@ -33,7 +30,7 @@ public class TemplateResponse implements WebResponse{
 			//TODO
 			log.error("something went wrong", te);
 		}
-		//out.flush();  
+		return false;
 	}
 
 }

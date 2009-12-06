@@ -10,8 +10,9 @@ public class RedirectResponse implements WebResponse{
 		this.redirectUrl = redirectUrl;
 	}
 
-	public void writeResponse(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public boolean writeResponse(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		response.sendRedirect( redirectUrl );
+		return false;
 	}
 
 }

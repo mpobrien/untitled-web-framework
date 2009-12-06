@@ -29,6 +29,7 @@ class SiteFilter implements Filter {
 		String requestUri = request.getRequestURI();
 		log.info(request.getMethod() + ": " + requestUri );
 		ControllerRequest controlRequest = this.mapper.matchUrl( requestUri ); 
+		boolean continueFilter = true;
 		if( controlRequest != null ){
 			Class controllerClass = controlRequest.getControllerClass();
 			List<String> args = controlRequest.getArgs();
@@ -47,10 +48,10 @@ class SiteFilter implements Filter {
 			}
 	 
 			if( result != null ){
-				result.writeResponse(request, response);
+				continueFilter = result.writeResponse(request, response);
 			}
 		}
-		filterChain.doFilter(request, response);
+		if( continueFilter ) filterChain.doFilter(request, response);
 	}
 
     public void destroy() { }
