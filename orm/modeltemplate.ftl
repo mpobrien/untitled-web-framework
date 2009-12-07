@@ -43,7 +43,7 @@ public class ${table.classname} extends ${modeltype}{
 	}
 
 <#if modeltype=="SingleKeyedModel">
-    public static DbField pkField(){ return ${table.classname}Field.${table.primaryKeys[0].name}; }
+    public DbField pkField(){ return ${table.classname}Field.${table.primaryKeys[0].name}; }
 	public ${table.primaryKeys[0].javaTypeStr} getPrimaryKey(){ return ${table.primaryKeys[0].javaName}; };
 </#if>
 
@@ -61,9 +61,10 @@ public class ${table.classname} extends ${modeltype}{
 </#if>
 
     public static final ImmutableList<DbField> FIELDS = new ImmutableList.Builder<DbField>().addAll( Lists.newArrayList( ${table.classname}Field.values() ) ).build();
+	private static final ClauseGenerator idClauseGen = Clauses.eq(${table.classname}Field.${table.primaryKeys[0].name});
 
-    public static ${modelmanagertype}<${table.classname}> objects( ConnectionProvider connProvider ){ return new ${modelmanagertype}( ${table.classname}.class, connProvider ); }
-    public static <T extends ${table.classname}> ${modelmanagertype}<T> objects( Class<T> returnClass, ConnectionProvider connProvider ){ return new ${modelmanagertype}<T>(returnClass, connProvider ); }
+    public static ${modelmanagertype}<${table.classname}> objects( ConnectionProvider connProvider ){ return new ${modelmanagertype}( ${table.classname}.class, connProvider, idClauseGen ); }
+    public static <T extends ${table.classname}> ${modelmanagertype}<T> objects( Class<T> returnClass, ConnectionProvider connProvider ){ return new ${modelmanagertype}<T>(returnClass, connProvider , idClauseGen); }
 
     public ImmutableList<DbField> fields(){ return FIELDS; }
 
