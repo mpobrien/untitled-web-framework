@@ -21,7 +21,7 @@
         <mkdir dir="${classes.dir}"/>
         <mkdir dir="dist"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true">
-            <compilerarg value="-Xlint"/>
+            <!--compilerarg value="-Xlint"/-->
             <classpath>
                 <fileset dir="${lib.dir}">
                     <include name="**/*.jar"/>

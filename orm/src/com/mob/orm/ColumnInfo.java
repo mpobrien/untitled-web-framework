@@ -38,7 +38,7 @@ public class ColumnInfo{
 		this.collation = collation!= null ? collation.toLowerCase().trim() : null;
     	this.key = key != null ? key.toLowerCase().trim() : null;
     	this.defaultVal = defaultVal;
-    	this.extra = extra;
+    	this.extra = extra + "";
 		this.javaType = getJavaType();
     }
 
@@ -52,6 +52,10 @@ public class ColumnInfo{
 
 	public boolean getIsPrimaryKey(){
 		return this.key != null && this.key.equals("pri");
+	}
+
+	public boolean getIsAutoIncrement(){
+		return this.extra.trim().toLowerCase().equals("auto_increment");
 	}
 
 	public boolean getIsUnique(){
@@ -110,7 +114,6 @@ public class ColumnInfo{
 			return JavaType.BOOLEAN;
 		} else if( intMatcher.matches() ){
 			String type = intMatcher.group( 1 );
-			System.out.println("unsigned check from " + intMatcher.group(0) + ": " + intMatcher.group(3));
 			boolean isUnsigned = intMatcher.group( 3 ) != null; 
 			if( type.equals("smallint") ) return JavaType.INTEGER;
 			if( type.matches("(mediumint|int|integer)") ) return isUnsigned ? JavaType.LONG: JavaType.INTEGER;
@@ -136,7 +139,10 @@ public class ColumnInfo{
 	}//}}}
 
 	public String toString(){
-		return this.columnName + " " + this.sqlType + " " + this.javaType + " Nullable: " + this.getIsNullable() + " (" + this.getJavaTypeStr() + ": " + getJavaName() + ")";
+		return (this.getIsPrimaryKey() ? "(PRIMARY KEY)" : "") + 
+		       this.columnName + "(" + this.sqlType + ", " + 
+			   (this.getIsNullable() ? " NULLABLE) " : " NOT NULL)  -   ") +
+			   this.javaType + " (" + this.getJavaTypeStr() + ": " + getJavaName() + ")";
 	}
 
 }
