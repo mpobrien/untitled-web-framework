@@ -9,6 +9,7 @@ mkdir -p $projectname/conf
 mkdir -p $projectname/tools
 mkdir -p $projectname/src/$projectname/ctrlrs
 mkdir -p $projectname/src/$projectname/modules
+mkdir -p $projectname/src/$projectname/models
 mkdir -p $projectname/WebContent/WEB-INF/
 mkdir -p $projectname/WebContent/static
 mkdir -p $projectname/templates
@@ -27,6 +28,7 @@ sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/build.xml
 sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/src/$projectname/ctrlrs/HomeController.java
 sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/src/$projectname/modules/MyServletContextListener.java
 sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/WebContent/WEB-INF/web.xml
+sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/admin.sh
 
 
 

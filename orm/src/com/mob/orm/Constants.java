@@ -48,6 +48,7 @@ public class Constants{
 	public static final Function<Object, String> toString = 
 		new Function<Object, String>(){
 			public String apply(Object o){ 
+				if( o == null ) return "[null]";
 				return o.toString();
 			}
 		};

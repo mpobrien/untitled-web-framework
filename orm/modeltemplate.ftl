@@ -43,7 +43,7 @@ public class ${table.classname} extends ${modeltype}{
 	}
 
 <#if modeltype=="SingleKeyedModel">
-    public DbField pkField(){ return ${table.classname}Field.${table.primaryKeys[0].name}; }
+    public static DbField pkField(){ return ${table.classname}Field.${table.primaryKeys[0].name}; }
 	public ${table.primaryKeys[0].javaTypeStr} getPrimaryKey(){ return ${table.primaryKeys[0].javaName}; };
 </#if>
 
@@ -57,7 +57,7 @@ public class ${table.classname} extends ${modeltype}{
     </#if>
 </#list>
 
-    public List<DbField> pkFields(){ return primaryKeyFields; }
+    public static List<DbField> pkFields(){ return primaryKeyFields; }
 </#if>
 
     public static final ImmutableList<DbField> FIELDS = new ImmutableList.Builder<DbField>().addAll( Lists.newArrayList( ${table.classname}Field.values() ) ).build();
@@ -101,17 +101,17 @@ public class ${table.classname} extends ${modeltype}{
 
 <#if modeltype == "SingleKeyedModel" || modeltype == "MultiKeyedModel">
     public void insert(ConnectionProvider cp){
-        Object[] args = new Object[ ${table.cols?size} ];
-            String sql = "INSERT INTO ${table.tablename} (<#rt>
+        Object[] args = new Object[ ${table.cols?size-1} ];
+        String sql = "INSERT INTO ${table.tablename} (<#rt>
     <#list table.nonAutoincCols as c>
-        <#if c_index == table.cols?size-1>
+        <#if c_index == table.nonAutoincCols?size-1>
         ${c.name})<#t>
         <#else>
         ${c.name},<#t>
         </#if>
     </#list> values (<#t>
     <#list table.nonAutoincCols as c>
-        <#if c_index == table.cols?size-1>
+        <#if c_index == table.nonAutoincCols?size-1>
         ?<#t>
         <#else>
         ?,<#t>
@@ -123,6 +123,7 @@ public class ${table.classname} extends ${modeltype}{
             args[ ${c_index} ] = this.${c.javaName};
         </#if>
     </#list>
+            this.objects(cp).update(sql,args);
             //TODO fetching the keys
             <#--this.${table.primaryKey.javaName} = this.objects(cp).updateGetKey(sql, args);-->
     }

@@ -85,13 +85,13 @@ public class ColumnInfo{
 	}
 
 	private JavaType getJavaType() throws Exception{//{{{
-		Matcher bitMatcher = Pattern.compile("bit(\\(\\d+\\))?").matcher( this.sqlType );
-		Matcher tinyMatcher = Pattern.compile("tinyint(\\(\\d+\\))?").matcher( this.sqlType );;
-		Matcher intMatcher =  Pattern.compile("(smallint|int|mediumint|integer|bigint)(\\(\\d+\\))?\\s*(unsigned)?").matcher(this.sqlType); 
+		Matcher bitMatcher = Pattern.compile("bit\\((\\d+)\\)?").matcher( this.sqlType );
+		Matcher tinyMatcher = Pattern.compile("tinyint\\((\\d+)\\)?").matcher( this.sqlType );;
+		Matcher intMatcher =  Pattern.compile("(smallint|int|mediumint|integer|bigint)\\((\\d+)\\)?\\s*(unsigned)?").matcher(this.sqlType); 
 
 		if( this.sqlType.matches("(tinytext|text|mediumtext|longtext|enum|set)") ){
 			return JavaType.STRING;
-		}else if( this.sqlType.matches("(char(\\(.*\\))?|varchar(\\(.*\\))?)") ){
+		}else if( this.sqlType.matches("(char\\((.*)\\)?|varchar\\((.*)\\)?)") ){
 			if( this.collation != null && this.collation.equals( "binary" ) ){
 				return JavaType.BYTEARRAY;
 			}else{
@@ -104,7 +104,12 @@ public class ColumnInfo{
 				return JavaType.BYTEARRAY;
 			}
 	    } else if( tinyMatcher.matches() ){
-			Integer tinySize = tinyMatcher.group( 1 ) == null ? new Integer( -1 ) : new Integer( tinyMatcher.group( 1 ) );
+			Integer tinySize;
+			if( tinyMatcher.group(1) == null ){
+				tinySize = -1;
+			}else{
+				tinySize = new Integer( tinyMatcher.group( 1 ) );
+			}
 			if( tinySize < 0 || tinySize.equals( 1 ) ){
 				return JavaType.BOOLEAN;
 			}else{
@@ -118,11 +123,11 @@ public class ColumnInfo{
 			if( type.equals("smallint") ) return JavaType.INTEGER;
 			if( type.matches("(mediumint|int|integer)") ) return isUnsigned ? JavaType.LONG: JavaType.INTEGER;
 			if( type.matches("bigint") ) return isUnsigned ? JavaType.BIGINTEGER: JavaType.LONG;
-		} else if( sqlType.matches("float(\\(\\d+\\))?") ){
+		} else if( sqlType.matches("float\\((\\d+)\\)?") ){
 			return JavaType.FLOAT;
-		} else if( sqlType.matches("double(\\(\\d+\\))?") ){
+		} else if( sqlType.matches("double\\((\\d+)\\)?") ){
 			return JavaType.DOUBLE;
-		} else if( sqlType.matches("decimal(\\(\\d+\\))?") ){
+		} else if( sqlType.matches("decimal\\((\\d+)\\)?") ){
 			return JavaType.BIGDECIMAL;
 		} else if( sqlType.matches("(date|datetime)") ){
 			return JavaType.DATE;
@@ -132,7 +137,7 @@ public class ColumnInfo{
 			return JavaType.TIME;
 		} else if( sqlType.matches("(tinyblob|blob|mediumblob|longblob)") ){
 			return JavaType.BYTEARRAY;
-		} else if( sqlType.matches("(binary|varbinary)(\\(\\d+\\))?") ){
+		} else if( sqlType.matches("(binary|varbinary)\\((d+)\\)?") ){
 			return JavaType.BYTEARRAY;
 		}
 		throw new Exception("couldn't figure out a java type for this column!");
