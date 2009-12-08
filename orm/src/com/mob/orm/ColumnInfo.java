@@ -39,7 +39,20 @@ public class ColumnInfo{
     	this.key = key != null ? key.toLowerCase().trim() : null;
     	this.defaultVal = defaultVal;
     	this.extra = extra + "";
-		this.javaType = getJavaType();
+		try{
+			this.javaType = getJavaType();
+		}catch(Exception e){
+			 System.out.println("columnName: " + columnName);
+			 System.out.println("sqlType: " + sqlType);
+			 System.out.println("collation: " + collation);
+			 System.out.println("nullable: " + nullable);
+			 System.out.println("key: " + key);
+			 System.out.println("defaultVal: " + defaultVal);
+			 System.out.println("extra: " + extra);
+			 System.out.println("privileges: " + privileges);
+			 System.out.println("comment: " + comment);
+			 throw e;
+		}
     }
 
     public ColumnInfo( BasicResultSet row ) throws Exception{
@@ -86,7 +99,7 @@ public class ColumnInfo{
 
 	private JavaType getJavaType() throws Exception{//{{{
 		Matcher bitMatcher = Pattern.compile("bit\\((\\d+)\\)?").matcher( this.sqlType );
-		Matcher tinyMatcher = Pattern.compile("tinyint\\((\\d+)\\)?").matcher( this.sqlType );;
+		Matcher tinyMatcher = Pattern.compile("tinyint\\((\\d+)\\)?( (un)?signed)?").matcher( this.sqlType );;
 		Matcher intMatcher =  Pattern.compile("(smallint|int|mediumint|integer|bigint)\\((\\d+)\\)?\\s*(unsigned)?").matcher(this.sqlType); 
 
 		if( this.sqlType.matches("(tinytext|text|mediumtext|longtext|enum|set)") ){
@@ -104,16 +117,11 @@ public class ColumnInfo{
 				return JavaType.BYTEARRAY;
 			}
 	    } else if( tinyMatcher.matches() ){
-			Integer tinySize;
 			if( tinyMatcher.group(1) == null ){
-				tinySize = -1;
-			}else{
-				tinySize = new Integer( tinyMatcher.group( 1 ) );
-			}
-			if( tinySize < 0 || tinySize.equals( 1 ) ){
-				return JavaType.BOOLEAN;
-			}else{
 				return JavaType.INTEGER;
+			}else{
+				Integer tinySize = new Integer( tinyMatcher.group( 1 ) );
+				return tinySize.equals( 1 ) ? JavaType.BOOLEAN : JavaType.INTEGER;
 			}
 		} else if( sqlType.matches("(bool|boolean)") ){
 			return JavaType.BOOLEAN;
@@ -123,11 +131,11 @@ public class ColumnInfo{
 			if( type.equals("smallint") ) return JavaType.INTEGER;
 			if( type.matches("(mediumint|int|integer)") ) return isUnsigned ? JavaType.LONG: JavaType.INTEGER;
 			if( type.matches("bigint") ) return isUnsigned ? JavaType.BIGINTEGER: JavaType.LONG;
-		} else if( sqlType.matches("float\\((\\d+)\\)?") ){
+		} else if( sqlType.matches("^float[\\(\\d\\),]*") ){
 			return JavaType.FLOAT;
 		} else if( sqlType.matches("double\\((\\d+)\\)?") ){
 			return JavaType.DOUBLE;
-		} else if( sqlType.matches("decimal\\((\\d+)\\)?") ){
+		} else if( sqlType.matches("^decimal[\\(\\d\\),]*") ){
 			return JavaType.BIGDECIMAL;
 		} else if( sqlType.matches("(date|datetime)") ){
 			return JavaType.DATE;
