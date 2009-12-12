@@ -5,16 +5,36 @@ import freemarker.template.*;
 import java.io.*;
 import com.google.common.base.*;
 import com.google.common.collect.*;
+import java.util.Properties;
 
 public class DbInspector{
 
     public static void main(String args[]) throws Exception{
-        ConnectionProvider cp = new TestConnectionProvider("com.mysql.jdbc.Driver","jdbc:mysql:///mike_testing","root","turtl3");
+		if( args.length != 1 && args.length != 3 ){
+			System.exit(2);
+		}
+
+		Properties propsFile = new Properties();
+		FileInputStream fis = null;
+		fis = new FileInputStream( new File( args[0] ));
+		propsFile.load(fis);    
+		fis.close();
+
+		String driver = propsFile.getProperty( "db.driver" );
+		String jdbc   = propsFile.getProperty( "db.jdbc" );
+		String user   = propsFile.getProperty( "db.user" );
+		String pw     = propsFile.getProperty( "db.pw" );
+		System.out.println("driver: " + driver);
+		System.out.println("jdbc: " + jdbc);
+		System.out.println("user: " + user);
+		System.out.println("pw: " + pw);
+
+        ConnectionProvider cp = new TestConnectionProvider(driver, jdbc, user, pw);
 		List<TableInfo> tables = getTables( cp );
-		if( args.length == 2 ){
+		if( args.length == 3 ){
 			System.out.println("Usage: dbinspector <outputdirectory> <packageName>");
-			String directory = args[0];
-			String packageName = args[1];
+			String directory = args[1];
+			String packageName = args[2];
 			Configuration config = new Configuration();
 			config.setObjectWrapper( ObjectWrapper.BEANS_WRAPPER );
 			Template template = config.getTemplate("modeltemplate.ftl");  
