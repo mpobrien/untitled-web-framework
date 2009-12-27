@@ -27,7 +27,7 @@ class SiteFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		String requestUri = request.getRequestURI();
-		log.info(request.getMethod() + ": " + requestUri );
+		long startTime = System.currentTimeMillis();
 		ControllerRequest controlRequest = this.mapper.matchUrl( requestUri ); 
 		boolean continueFilter = true;
 		if( controlRequest != null ){
@@ -52,6 +52,8 @@ class SiteFilter implements Filter {
 			}
 		}
 		if( continueFilter ) filterChain.doFilter(request, response);
+		long endTime = System.currentTimeMillis();
+		log.info(request.getMethod() + ": " + requestUri + " rendered in " + (endTime-startTime) + "ms" );
 	}
 
     public void destroy() { }
