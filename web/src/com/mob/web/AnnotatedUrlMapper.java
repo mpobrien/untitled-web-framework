@@ -12,10 +12,13 @@ import org.apache.log4j.*;
 import static com.google.inject.matcher.Matchers.annotatedWith;
 import static com.google.inject.matcher.Matchers.subclassesOf;
 
-public class AnnotatedUrlMapper implements UrlMapper{
+@Singleton
+public class AnnotatedUrlMapper implements UrlMapper, ReverseMapper{
+
 	private static Logger log = Logger.getLogger(AnnotatedUrlMapper.class);
 	private Map<java.util.regex.Matcher,Class<? extends Controller>> mappings = Maps.newHashMap();
 	private final List<Package> controllerPackages;
+	private final Map<Class<? extends Controller>, ReverseMatch> reverseMatchers = Maps.newHashMap();
 
 	@Inject
 	public AnnotatedUrlMapper( @Named("controller.packages") List<Package> controllerPackages ){//{{{
@@ -33,7 +36,14 @@ public class AnnotatedUrlMapper implements UrlMapper{
 			Pattern pat = Pattern.compile(regex);
 			Matcher mat = pat.matcher("");
 			mappings.put( mat, c1 );
+			try{
+				ReverseMatch rm = new ReverseMatch( regex );
+				this.reverseMatchers.put( c1, rm );
+			}catch(Exception e){
+				log.warn("Couldn't create reversible mapping for: " + c1);
+			}
 		}
+
     }//}}}
 
 	@Override
@@ -52,6 +62,15 @@ public class AnnotatedUrlMapper implements UrlMapper{
 
     public String toString(){
 		return "AnnotatedUrlMapper -mappings: " + mappings.toString();
+	}
+
+	public String reverseMatch(Class<? extends Controller> c1, String... args){
+		ReverseMatch rm = this.reverseMatchers.get( c1 );
+		if( rm == null ){
+			throw new RuntimeException("No reverse matcher found for class: " + c1);
+		}else{
+			return rm.reverse( args );
+		}
 	}
 
 }
