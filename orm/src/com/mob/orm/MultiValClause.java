@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class MultiValClause extends Clause{
 
-	private final List<Object> values;
+	private final Iterable<Object> values;
 	private final DbField field;
 
 	public MultiValClause(DbField field, Object... values){
@@ -14,15 +14,15 @@ public class MultiValClause extends Clause{
 		this.values = Arrays.asList( values );
 	}
 
-	public MultiValClause(DbField field, List<Object> values){
+	public MultiValClause(DbField field, Iterable<Object> values){
 		this.field = field;
 		this.values = values;
 	}
 
 	public String getSql(){
-		if( values == null || values.isEmpty() ) return "";
+		if( values == null || Iterables.isEmpty(values) ) return "";
 		return this.field.column() + 
-		       (this.not ? " NOT IN " : " IN ") + Constants.getQuestionMarks( values.size() );
+		       (this.not ? " NOT IN " : " IN ") + Constants.getQuestionMarks( Iterables.size(values) );
 	}
 	
 	@Override

@@ -68,6 +68,10 @@ public class Clauses{
 		return new MultiValClause(field, values);
 	}
 
+	public static Clause in(DbField field, Iterable<Object> values){
+		return new MultiValClause(field, values);
+	}
+
 	public static Clause notIn(DbField field, Object... values){
 		return new MultiValClause(field, values).negate();
 	}
