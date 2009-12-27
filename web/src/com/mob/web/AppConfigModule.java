@@ -83,6 +83,12 @@ public class AppConfigModule extends AbstractModule {
 		// Url Mappings
 		bind(new TypeLiteral<List<Package>>() {}).annotatedWith( Names.named("controller.packages") ).toInstance( this.packages );
 
+		bind(ReverseMapper.class).to(AnnotatedUrlMapper.class);
+
+	}
+
+	public ImmutableMap<String,String> settings(){
+		return Maps.fromProperties(this.propsFile);
 	}
 
 	private static Properties loadProperties() throws Exception {
