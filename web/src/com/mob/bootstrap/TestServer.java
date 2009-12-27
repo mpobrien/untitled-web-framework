@@ -12,6 +12,7 @@ public class TestServer {
 	private final String port;
 	private final String webapp;
 
+	@Inject
 	public TestServer( @Named("server.port") String port, @Named("server.data") String webapp ){
 		this.port = port;
 		this.webapp = webapp;
