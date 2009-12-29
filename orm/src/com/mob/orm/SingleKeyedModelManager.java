@@ -13,19 +13,18 @@ public class SingleKeyedModelManager<T extends SingleKeyedModel> extends ModelMa
 		this.idClauseGen = idClauseGen;
  	}//}}}
 
-  	public List<T> get( Object o ){//{{{
+  	public T get( Object o ){//{{{
 		try{
 			T model = (T)returnClass.newInstance();
 			SelectQuerySet q = select( model.fields() ).where( this.idClauseGen.make( o ) );
 			QueryExecutor qe = new QueryExecutor( this.connProvider );
 			BasicResultSet results = qe.execute( q );
-			List<T> returnList = Lists.newArrayList();
-			while( results.next() ){
+			if( results.next() ){
 				model.populateWithRS( results, 0, 0 );
-				returnList.add( model );
-				model = (T)returnClass.newInstance();
+				return model;
+			}else{
+				return null;
 			}
-			return returnList;
 		}catch(Exception e){
 			e.printStackTrace();
 			//TODO fix this
