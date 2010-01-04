@@ -7,7 +7,7 @@ import javax.servlet.http.*;
 public abstract class Form{
 
 	protected LinkedHashMap<String, FormField> formFields = null;
-	protected HashMap<String, Set<String>> errors = null;
+	protected FormErrors errors = null;
 
     public Form(){//{{{
 		this.fields();
@@ -22,11 +22,11 @@ public abstract class Form{
 		this.populateFromMap( (Map<String, String[]>)request.getParameterMap() );
 	}//}}}
 
-	public HashMap<String, Set<String>> populateFromMap(Map<String, String[]> requestValues){//{{{
+	public FormErrors populateFromMap(Map<String, String[]> requestValues){//{{{
 		if( this.errors != null ){
 			return this.errors;
 		}else{
-			this.errors = new HashMap<String, Set<String>>();
+			this.errors = new FormErrors();
 		}
 		for (Map.Entry<String, FormField> entry : formFields.entrySet()) {
 			String key = entry.getKey();
@@ -36,12 +36,8 @@ public abstract class Form{
 				value.validate();
 			}catch(FieldException fp){
 				fp.printStackTrace();
-				Set<String> fieldErrors = errors.get( fp.getFieldName() );
-				if( fieldErrors == null ){
-					fieldErrors = new HashSet<String>();
-				}
-				fieldErrors.add( fp.getErrorKey() );
-				errors.put( key, fieldErrors );
+				Set<String> fieldErrors = this.errors.addError( fp.getFieldName(), fp.getErrorKey() );
+				value.setErrors( fieldErrors );
 			}
 		}
 		return this.errors;
@@ -65,7 +61,7 @@ public abstract class Form{
 		}
 	}//}}}
 
-	public HashMap<String, Set<String>> getErrors(){//{{{
+	public FormErrors getErrors(){//{{{
 		return this.errors;
 	}//}}}
 
