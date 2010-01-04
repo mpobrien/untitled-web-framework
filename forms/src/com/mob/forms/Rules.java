@@ -19,8 +19,6 @@ public class Rules{
     public static ValidationRule<String> matchesRegex(final String regex){//{{{
 		return new ValidationRule<String>(){
 			public boolean validate(String value){
-				System.out.println("value: " + value);
-				System.out.println("match?: " + value.matches(regex));
 				if( value != null ){
 					return value.matches( regex );
 				}else{

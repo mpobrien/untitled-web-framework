@@ -36,7 +36,7 @@ public abstract class AbstractFormField<T> implements FormField{
 			return;
 		}else{
 			for( ValidationRule<T> rule : this.rules ){
-				boolean test = rule.validate( this.value );
+				boolean test = rule.validate( (T)this.getValue() );
 				if( test == false ){
 					throw new FieldValidationException(this.name, rule.key() );
 				}
@@ -45,5 +45,9 @@ public abstract class AbstractFormField<T> implements FormField{
 	}
 
 	public abstract Widget getWidget();
+
+	public void setWidget(Widget widget){
+		this.widget = widget;
+	}
 
 }
