@@ -17,11 +17,11 @@ public abstract class Controller{
 		return;
 	}
 
-	public WebResponse get(HttpServletRequest request){
+	public WebResponse get(HttpServletRequest request, HttpServletResponse response){
 		return null;
 	}
 
-	public WebResponse post(HttpServletRequest request){
+	public WebResponse post(HttpServletRequest request, HttpServletResponse response){
 		return null;
 	}
 
