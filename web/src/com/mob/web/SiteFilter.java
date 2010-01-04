@@ -35,7 +35,7 @@ class SiteFilter implements Filter {
 			List<String> args = controlRequest.getArgs();
 			Controller controller = (Controller)injector.getInstance( controllerClass );
 			controller.setArgs( args );
-			controller.processArgs();
+			controller.preprocess( request );
 			controller.setContext(); //TODO set up contexts here
 
 			WebResponse result;

@@ -13,18 +13,12 @@ public class StringField extends AbstractFormField<String> implements FormField{
 
 	@Override
 	public void parseValue(String[] paramValues) throws FieldParseException{//{{{
-		System.out.println(paramValues);
 		if( paramValues == null || paramValues.length == 0 ){
-			System.out.println("mob1");
 			this.raw = null;
 			this.value = this.raw;
 		}else{
-			System.out.println("mob2");
 			this.raw = paramValues[0] + "";
 			this.value = this.raw;
-			System.out.println(value);
-			System.out.println(this.raw);
-
 		}
 	}//}}}
 

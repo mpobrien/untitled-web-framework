@@ -35,6 +35,7 @@ public abstract class Form{
 				value.parseValue( requestValues.get( key ) );
 				value.validate();
 			}catch(FieldException fp){
+				fp.printStackTrace();
 				Set<String> fieldErrors = errors.get( fp.getFieldName() );
 				if( fieldErrors == null ){
 					fieldErrors = new HashSet<String>();
@@ -90,6 +91,20 @@ public abstract class Form{
 
 	protected ChoiceField choiceField(String name, Set<String> choices, ValidationRule<String>... rules){//{{{
 		ChoiceField newField = new ChoiceField( name, choices );
+		newField.setRules( Arrays.asList( rules ) );
+		field( newField );
+		return newField;
+	}//}}}
+
+	protected EnumChoiceField choiceField(String name, Class<? extends Enum<?>> enumClass, ValidationRule<String>... rules){//{{{
+		EnumChoiceField newField = new EnumChoiceField( name, enumClass );
+		newField.setRules( Arrays.asList( rules ) );
+		field( newField );
+		return newField;
+	}//}}}
+
+	protected <T extends Enum<T> & CustomChoice> CustomEnumChoiceField choiceField(String name, Class<T> enumClass, ValidationRule<String>... rules){//{{{
+		CustomEnumChoiceField newField = new CustomEnumChoiceField( name, enumClass );
 		newField.setRules( Arrays.asList( rules ) );
 		field( newField );
 		return newField;

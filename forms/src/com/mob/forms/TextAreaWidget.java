@@ -1,17 +1,17 @@
 package com.mob.forms;
 
-public class TextInput implements Widget{
+public class TextAreaWidget implements Widget{
 
 	private final FormField field;
 	private final String contents;
 
-	public TextInput(FormField field, String contents){
+	public TextAreaWidget(FormField field, String contents){
 		this.field = field;
 		this.contents = contents + "";
 	}
 
 	public String getHtml(){
-		return "<input type=\"text\" name=\"" + this.field.getName() + "\" value=\"" + this.contents + "\">";
+		return "<textarea name=\"" + this.field.getName() + "\">" + this.contents + "</textarea>";
 	}
 
 	public String getLabel(){

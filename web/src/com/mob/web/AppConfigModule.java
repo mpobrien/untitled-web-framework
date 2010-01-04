@@ -72,14 +72,14 @@ public class AppConfigModule extends AbstractModule {
 		bind(Configuration.class).toInstance( config );
 
 		//Database settings/////////////
-		Map<String,String> dbSettings = Maps.filterKeys( Maps.fromProperties(this.propsFile), C.prefixFilter( DB_PREFIX ) );
-		Names.bindProperties( binder(), dbSettings );
+// 		Map<String,String> dbSettings = Maps.filterKeys( Maps.fromProperties(this.propsFile), C.prefixFilter( DB_PREFIX ) );
+		Names.bindProperties( binder(), Maps.fromProperties(this.propsFile) );
 		bind(ConnectionProvider.class).to(SimpleConnectionProvider.class);
 
-		//Server settings:
-		bind(String.class).annotatedWith(Names.named("server.port")).toInstance(this.propsFile.getProperty(SERVERPORT_KEY));
-		bind(String.class).annotatedWith(Names.named("server.data")).toInstance(this.propsFile.getProperty(SERVERDATA_KEY));
-
+// 		//Server settings:
+// 		bind(String.class).annotatedWith(Names.named("server.port")).toInstance(this.propsFile.getProperty(SERVERPORT_KEY));
+// 		bind(String.class).annotatedWith(Names.named("server.data")).toInstance(this.propsFile.getProperty(SERVERDATA_KEY));
+// 
 		// Url Mappings
 		bind(new TypeLiteral<List<Package>>() {}).annotatedWith( Names.named("controller.packages") ).toInstance( this.packages );
 
