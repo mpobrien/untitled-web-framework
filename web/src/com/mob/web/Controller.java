@@ -13,7 +13,7 @@ public abstract class Controller{
 		this.responses = responses;
 	}
 
-	public void preprocess(HttpServletRequest request){
+	public void preprocess(HttpServletRequest request, HttpServletResponse response){
 		return;
 	}
 
