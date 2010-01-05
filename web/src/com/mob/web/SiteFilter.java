@@ -35,14 +35,14 @@ class SiteFilter implements Filter {
 			List<String> args = controlRequest.getArgs();
 			Controller controller = (Controller)injector.getInstance( controllerClass );
 			controller.setArgs( args );
-			controller.preprocess( request );
+			controller.preprocess( request, response );
 			controller.setContext(); //TODO set up contexts here
 
 			WebResponse result;
 			if( request.getMethod().equals("GET") ){
-				result = controller.get( request );
+				result = controller.get( request, response );
 			}else if( request.getMethod().equals("POST") ){
-				result = controller.post( request );
+				result = controller.post( request, response );
 			}else{
 				result = null; // TODO: unsupported method?
 			}
