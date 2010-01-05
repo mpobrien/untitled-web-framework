@@ -44,13 +44,16 @@ public class ChoiceField extends AbstractFormField<String> implements FormField{
 
 	public Widget getWidget(){
 		if( this.widget != null ) return this.widget;
+		final String fieldVal = this.getValue();
 		return new Widget(){
 			public String getHtml(){
 				StringBuilder sb = new StringBuilder("<select name=\"" + name + "\">\n");
 				for (Map.Entry<String, String> entry : choices.entrySet()) {
-					String key = entry.getKey();
-					String val = entry.getValue();
-					sb.append("<option value=\"" + val + "\">" + key + "</option>\n") ;
+					String key = entry.getKey() + "";
+					String val = entry.getValue() + "";
+					sb.append("<option value=\"" + val + "\"" +
+							((fieldVal == null || !fieldVal.equals(val)) ? "" : " selected") +
+							">" + key + "</option>\n") ;
 				}
 				sb.append("</select>");
 				return sb.toString();
