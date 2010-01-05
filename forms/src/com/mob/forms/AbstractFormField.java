@@ -8,6 +8,7 @@ public abstract class AbstractFormField<T> implements FormField{
 	protected List<ValidationRule<T>> rules = null;
 	protected T value;
 	protected Widget widget = null;
+	protected Set<String> errors = null;
 
 	public AbstractFormField(String name){
 		if( name == null || name.equals("") ) throw new IllegalArgumentException("null or blank string not allowed for field name");
@@ -48,6 +49,16 @@ public abstract class AbstractFormField<T> implements FormField{
 
 	public void setWidget(Widget widget){
 		this.widget = widget;
+	}
+
+	@Override
+	public Set<String> getErrors(){
+		return this.errors;
+	}
+
+	@Override
+	public void setErrors( Set<String> errs ){
+		this.errors = errors;
 	}
 
 }
