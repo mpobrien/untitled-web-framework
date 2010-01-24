@@ -1,7 +1,8 @@
 package com.mob.bootstrap;
-import org.mortbay.jetty.*;
-import org.mortbay.jetty.webapp.*;
-import org.mortbay.jetty.bio.*;
+import org.eclipse.jetty.server.*;
+import org.eclipse.jetty.webapp.*;
+import org.eclipse.jetty.io.bio.*;
+import org.eclipse.jetty.server.bio.*;
 import com.google.inject.*;
 import com.google.inject.name.*;
 
@@ -38,7 +39,7 @@ public class TestServer {
         connector.setMaxIdleTime(60000);
  
         TestServer.SERVER.setConnectors(new Connector[] { connector });
-        TestServer.SERVER.setHandlers(new Handler[] { app });
+        TestServer.SERVER.setHandler( app );
         TestServer.SERVER.setAttribute("org.mortbay.jetty.Request.maxFormContentSize", 0);
         TestServer.SERVER.setStopAtShutdown(true);
  

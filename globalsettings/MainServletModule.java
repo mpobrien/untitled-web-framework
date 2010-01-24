@@ -1,6 +1,8 @@
-package com.mob.web;
+package !!!PROJECT_NAME!!!.modules;
+import !!!PROJECT_NAME!!!.ctrlrs.*;
 import com.google.inject.*;
 import com.google.inject.servlet.*;
+import com.mob.web.*;
 import java.io.*;
 import javax.servlet.http.*;
 import javax.servlet.*;

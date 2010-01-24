@@ -21,12 +21,14 @@ cp $global_settings_dir/settings.properties $projectname/conf
 cp $global_settings_dir/HomeController.java $projectname/src/$projectname/ctrlrs
 #TODO /modules is a bad place for this
 cp $global_settings_dir/MyServletContextListener.java $projectname/src/$projectname/modules
+cp $global_settings_dir/MainServletModule.java $projectname/src/$projectname/modules
 cp $global_settings_dir/web.xml $projectname/WebContent/WEB-INF
 cp $global_settings_dir/admin.sh $projectname/
 
 sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/build.xml 
 sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/src/$projectname/ctrlrs/HomeController.java
 sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/src/$projectname/modules/MyServletContextListener.java
+sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/src/$projectname/modules/MainServletModule.java
 sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/WebContent/WEB-INF/web.xml
 sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/admin.sh
 

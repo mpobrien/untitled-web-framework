@@ -93,7 +93,7 @@ public class AppConfigModule extends AbstractModule {
 
 	private static Properties loadProperties() throws Exception {
 		Properties properties = new Properties();
-		ClassLoader loader = MyServletContextListener.class.getClassLoader();
+		ClassLoader loader = AppConfigModule.class.getClassLoader();
 		URL url = loader.getResource("settings.properties");
 		if( url == null ){
 			log.warn("couldn't find the settings.properties file!");

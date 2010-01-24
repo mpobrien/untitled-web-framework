@@ -9,7 +9,7 @@ import java.util.*;
 import org.apache.log4j.*;
 
 @Singleton
-class SiteFilter implements Filter {
+public class SiteFilter implements Filter {
 	private static Logger log = Logger.getLogger(SiteFilter.class);
 	private final UrlMapper mapper;
 	private final Injector injector;

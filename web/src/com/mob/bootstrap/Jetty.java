@@ -1,8 +1,7 @@
 package com.mob.bootstrap;
 import com.mob.web.*;
-import org.mortbay.jetty.*;
-import org.mortbay.jetty.webapp.*;
-import org.mortbay.jetty.bio.*;
+import org.eclipse.jetty.server.*;
+import org.eclipse.jetty.webapp.*;
 import com.google.inject.*;
 import com.google.inject.name.Names;
 
