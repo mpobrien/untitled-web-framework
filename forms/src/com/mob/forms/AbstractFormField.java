@@ -6,9 +6,10 @@ public abstract class AbstractFormField<T> implements FormField{
 	protected final String name;
 	protected String raw;
 	protected List<ValidationRule<T>> rules = null;
-	protected T value;
+	protected T value = null;
 	protected Widget widget = null;
 	protected Set<String> errors = null;
+	protected Condition skipWhenCondition = null;
 
 	public AbstractFormField(String name){
 		if( name == null || name.equals("") ) throw new IllegalArgumentException("null or blank string not allowed for field name");
@@ -26,6 +27,11 @@ public abstract class AbstractFormField<T> implements FormField{
 
 	public String getRaw(){
 		return this.raw;
+	}
+
+	public boolean proceed(){
+		if( skipWhenCondition != null && skipWhenCondition.isSatisfied() ) return false;
+		return true;
 	}
 
 	public abstract Object getValue();

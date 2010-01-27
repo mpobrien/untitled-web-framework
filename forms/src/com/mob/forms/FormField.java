@@ -11,6 +11,8 @@ public interface FormField{
 
 	public Object getValue();
 
+	public boolean proceed();
+
 	public void parseValue(String[] paramValues) throws FieldParseException;
 
 	public void validate() throws FieldValidationException;

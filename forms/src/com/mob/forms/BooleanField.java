@@ -7,8 +7,8 @@ public class BooleanField extends AbstractFormField<Boolean> implements FormFiel
 	}
 
 	@Override
-	public String getValue(){
-		return this.raw;
+	public Boolean getValue(){
+		return this.value;
 	}
 
 	@Override
@@ -28,18 +28,36 @@ public class BooleanField extends AbstractFormField<Boolean> implements FormFiel
 		return "BooleanField["+this.name+"]: <" + value + ">";
 	}
 
+	public void setValue(boolean val){
+		this.value = value;
+	}
+
 	public Widget getWidget(){
 		if( this.widget != null ) return this.widget;
+		final boolean val = this.getValue() != null ? this.getValue() : false;
 		return new Widget(){
 			public String getHtml(){
 				return "<input type=\"checkbox\" name=\"" +
-				       name + "\"" + (value ? " checked>" : ">");
+				       name + "\"" + (val ? " checked>" : ">");
 			}
 
 			public String getLabel(){
 				return "<label for=\"" + name + "\">" + name + "</label>";
 			}
 		};
+	}
+
+	public Condition isChecked(){
+		return new Condition(){
+			public boolean isSatisfied(){
+				return getValue();
+			}
+		};
+	}
+
+	public BooleanField skipWhen( Condition con ){
+		this.skipWhenCondition = con;
+		return this;
 	}
 
 }

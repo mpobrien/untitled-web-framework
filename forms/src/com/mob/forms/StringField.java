@@ -2,6 +2,8 @@ package com.mob.forms;
 
 public class StringField extends AbstractFormField<String> implements FormField{
 
+	private String defaultWhenValue = null;
+
 	public StringField(String name){
 		super( name );
 	}
@@ -34,6 +36,27 @@ public class StringField extends AbstractFormField<String> implements FormField{
 			public String getHtml(){ return "<input type=\"text\" name=\"" + name + "\" value=\"" + widgetValue + "\">"; }
 			public String getLabel(){ return "<label for=\"" + name + "\">" + name + "</label>"; }
 		};
+	}
+
+    public Condition valueEquals( final String value ){
+		return new Condition(){
+			public boolean isSatisfied(){
+				return value.equals( getValue() );
+			}
+		};
+	}
+
+    public Condition blank(){
+		return new Condition(){
+			public boolean isSatisfied(){
+				return getValue() == null || getValue().equals( "" );
+			}
+		};
+	}
+
+	public StringField skipWhen( Condition con ){
+		this.skipWhenCondition = con;
+		return this;
 	}
 
 }

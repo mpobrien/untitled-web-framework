@@ -27,7 +27,7 @@ public class IntegerField extends AbstractFormField<Integer> implements FormFiel
 				this.value = new Integer( paramValues[0] );
 				this.raw = this.value.toString();
 			}catch(NumberFormatException e){
-				throw new FieldParseException( this.name, "format"); 
+				throw new FieldParseException( this.name, "invalid"); 
 			}
 		}
 	}//}}}
@@ -46,5 +46,9 @@ public class IntegerField extends AbstractFormField<Integer> implements FormFiel
 		};
 	}
 
+	public IntegerField skipWhen( Condition con ){
+		this.skipWhenCondition = con;
+		return this;
+	}
 
 }

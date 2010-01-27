@@ -16,6 +16,19 @@ public class Rules{
 		};
 	}//}}}
 
+	public static ValidationRule requiredWhen( final Condition checkCon ){
+		return new ValidationRule(){
+			public boolean validate(Object value){
+				if( checkCon.isSatisfied() ){
+					return value != null;
+				}else {
+					return true;
+				}
+			}
+			public String key(){ return REQUIRED_ERROR; }
+		};
+	}
+
     public static ValidationRule<String> matchesRegex(final String regex){//{{{
 		return new ValidationRule<String>(){
 			public boolean validate(String value){

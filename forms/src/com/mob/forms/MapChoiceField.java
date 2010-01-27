@@ -3,7 +3,7 @@ import java.util.*;
 import com.mob.forms.ChoiceField.Pair;
 import com.google.common.collect.AbstractIterator;
 
-public class MapChoiceField extends AbstractFormField<String> implements ChoiceField{
+public class MapChoiceField extends AbstractFormField<String>{
 
     private final Map<String, String> choices;
 
@@ -20,8 +20,8 @@ public class MapChoiceField extends AbstractFormField<String> implements ChoiceF
 		}
 	}//}}}
 
-	@Override
-	public Iterator<Pair<String,String>> getOptionsIterator(){
+	//@Override
+	public Iterator<Pair<String,String>> getOptionsIterator(){//{{{
 		final Iterator<Map.Entry<String,String>> in = this.choices.entrySet().iterator();
 		return new AbstractIterator<Pair<String,String>>() {
 			protected Pair<String,String> computeNext() {
@@ -32,7 +32,7 @@ public class MapChoiceField extends AbstractFormField<String> implements ChoiceF
 				return endOfData();
 		   }
 		};
-	}
+	}//}}}
 
 	@Override
 	public String getValue(){//{{{
@@ -58,11 +58,35 @@ public class MapChoiceField extends AbstractFormField<String> implements ChoiceF
 		return "ChoiceField["+this.name+"]: <" + value + ">";
 	}//}}}
 
-	public Widget getWidget(){
+	public Widget getWidget(){//{{{
 		if( this.widget != null ) return this.widget;
-		
-		WidgetGenerator widgGen = new SelectInputGenerator( this );
-		return widgGen.getWidget();
+		return new Widget(){
+			public String getHtml(){
+				StringBuilder sb = new StringBuilder();
+				sb.append("<select name=\"" + name + "\">\n");
+				Iterator<Pair<String,String>> options = getOptionsIterator();
+				while( options.hasNext() ){
+					Pair<String,String> keyVal = options.next();
+					sb.append("<option value=\"" + keyVal.second() + "\">" + keyVal.first() + "</option>");
+				}
+				return sb.toString();
+			}
+			public String getLabel(){ return "<label for=\"" + name + "\">" + name + "</label>"; }
+		};
+	}//}}}
+
+	public Condition isChosen( final String choice ){//{{{
+		return new Condition(){
+			public boolean isSatisfied(){
+				return choice.equals( getValue() );
+			}
+		};
+	}//}}}
+
+
+	public MapChoiceField skipWhen( Condition con ){
+		this.skipWhenCondition = con;
+		return this;
 	}
 
 }

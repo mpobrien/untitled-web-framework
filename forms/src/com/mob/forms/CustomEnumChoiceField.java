@@ -55,4 +55,8 @@ public class CustomEnumChoiceField<T extends Enum<T> & CustomChoice> extends Abs
 		};
 	}
  
+	public CustomEnumChoiceField skipWhen( Condition con ){
+		this.skipWhenCondition = con;
+		return this;
+	}
 }

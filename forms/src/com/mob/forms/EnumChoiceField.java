@@ -52,4 +52,17 @@ public class EnumChoiceField<T extends Enum<T>> extends AbstractFormField<T> imp
 		};
 	}//}}}
  
+	public Condition isChosen( final T choice ){//{{{
+		return new Condition(){
+			public boolean isSatisfied(){
+				return choice.equals( getValue() );
+			}
+		};
+	}//}}}
+
+	public EnumChoiceField skipWhen( Condition con ){
+		this.skipWhenCondition = con;
+		return this;
+	}
+
 }

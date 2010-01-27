@@ -65,4 +65,36 @@ public class ChoiceField extends AbstractFormField<String> implements FormField{
 		};
 	}
 
+    public static class Pair<T1,T2>{//{{{
+        final T1 first;
+        final T2 second;
+
+        public Pair(T1 first, T2 second){
+            this.first = first;
+            this.second = second;
+        }
+
+        public String toString(){
+            return (this.first != null ? this.first.toString() : "(null)") + ":"
+                   + (this.second != null ? this.second.toString() : "(null)");
+        }
+
+        public T1 first(){ return this.first; }
+        public T2 second(){ return this.second; }
+
+    }//}}}
+
+	public Condition isChosen( final String choice ){//{{{
+		return new Condition(){
+			public boolean isSatisfied(){
+				return choice.equals( getValue() );
+			}
+		};
+	}//}}}
+
+	public ChoiceField skipWhen( Condition con ){
+		this.skipWhenCondition = con;
+		return this;
+	}
+
 }

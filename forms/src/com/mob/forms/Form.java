@@ -32,8 +32,10 @@ public abstract class Form{
 			String key = entry.getKey();
 			FormField value = entry.getValue();
 			try{
-				value.parseValue( requestValues.get( key ) );
-				value.validate();
+				if( value.proceed() ){
+					value.parseValue( requestValues.get( key ) );
+					value.validate();
+				}
 			}catch(FieldException fp){
 				fp.printStackTrace();
 				Set<String> fieldErrors = this.errors.addError( fp.getFieldName(), fp.getErrorKey() );
@@ -75,6 +77,13 @@ public abstract class Form{
 		StringField newField = new StringField( name );
 		field( newField );
 		newField.setRules( Arrays.asList( rules ) );
+		return newField;
+	}//}}}
+
+	protected BooleanField boolField(String name){//{{{
+		BooleanField newField = new BooleanField( name );
+		field( newField );
+		//newField.setRules( Arrays.asList( rules ) );
 		return newField;
 	}//}}}
 
