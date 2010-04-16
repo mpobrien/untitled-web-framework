@@ -1,0 +1,53 @@
+<project name="forms" default="build" basedir=".">
+    <target name="init">
+        <property name="src.dir" value="src"/>
+        <property name="lib.dir" value="lib"/>
+        <property name="classes.dir" value="WebContent/WEB-INF/classes"/>
+        <property name="dist.dir" value="dist"/>
+    </target>
+    <target name="tags">
+        <exec executable="ctags">
+            <arg line="--recurse=yes"/>
+            <arg line="--links=yes"/>
+            <arg line="--java-types=cimp"/>
+            <arg line="-f .tags ./src"/>
+        </exec>
+    </target>
+    <target name="clean" depends="init">
+        <deltree dir="${classes.dir}"/>
+        <deltree dir="dist"/>
+    </target>
+    <target name="build" depends="init, clean">
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="dist"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true">
+            <classpath>
+                <fileset dir="${lib.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+    <target name="compile" depends="clean, build">
+    </target>
+
+    <target name="dist" depends="build"> 
+      <jar destfile="${dist.dir}/web.jar" basedir="${classes.dir}"/>
+    </target>
+    <!--
+    <target name="dist">
+        <war destfile="dist/myapp.war" webxml="WebContent/WEB-INF/web.xml">
+            <lib dir="lib">
+                <include name="*.jar"/>
+            </lib>
+  <classes dir="build"/>
+</war>
+-->
+
+<!--
+          <fileset dir="src/html/myapp"/>
+          <fileset dir="src/jsp/myapp"/>
+-->
+
+
+</project>
