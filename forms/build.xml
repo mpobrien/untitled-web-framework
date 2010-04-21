@@ -1,8 +1,9 @@
 <project name="forms" default="build" basedir=".">
     <target name="init">
         <property name="src.dir" value="src"/>
+        <property name="tests.dir" value="tests"/>
         <property name="lib.dir" value="lib"/>
-        <property name="classes.dir" value="WebContent/WEB-INF/classes"/>
+        <property name="classes.dir" value="build"/>
         <property name="dist.dir" value="dist"/>
     </target>
     <target name="tags">
