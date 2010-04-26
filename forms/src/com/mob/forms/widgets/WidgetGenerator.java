@@ -15,20 +15,35 @@ public class WidgetGenerator{
 			}
 
 			public String getLabel(){
-				return "";
+				return basicLabel(field);
 			}
 
 		};
 	}//}}}
 
-	public static Widget text(final AbstractFormField field){//{{{
+	public static Widget checkbox(final AbstractFormField field){//{{{
 		return new Widget(){
 			public String getHtml(){
-				return "<input type=\"text\" name=\"" + escapeHtml(field.getName()) + "\" value=\"" + escapeHtml(field.getRawValue()) + "\"/>";
+				boolean checked = false;
+				if( field instanceof BooleanField) checked = ((BooleanField)field).getValue();
+				return "<input type=\"checkbox\" name=\"" + escapeHtml(field.getName()) + "\" value=\"on\"" + (checked?" checked":"") + "/>";
 			}
 
 			public String getLabel(){
-				return "<label for=\"" + escapeHtml(field.getName()) + "\">" + escapeHtml(getNiceName(field.getName())) + "</label>";
+				return basicLabel(field);
+			}
+
+		};
+	}//}}}
+
+	public static Widget text(final AbstractFormField field){//{{{ 
+		return new Widget(){ 
+			public String getHtml(){ 
+				return "<input type=\"text\" name=\"" + escapeHtml(field.getName()) + "\" value=\"" + escapeHtml(field.getRawValue() + "") + "\"/>"; 
+			} 
+			
+			public String getLabel(){ 
+				return basicLabel(field); 
 			}
 		};
 	}//}}}
@@ -79,5 +94,9 @@ public class WidgetGenerator{
 			return fullOutput.toString();
 		}
 	}//}}}
+
+	public static String basicLabel(final AbstractFormField field){
+		return "<label for=\"" + escapeHtml(field.getName()) + "\">" + escapeHtml(getNiceName(field.getName())) + "</label>";
+	}
 
 }

@@ -1,6 +1,9 @@
 package com.mob.forms;
 import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Enumeration;
+import javax.servlet.ServletRequest;
 
 public abstract class AbstractForm{
 
@@ -14,6 +17,22 @@ public abstract class AbstractForm{
 
 	public void field(AbstractFormField field){
 		this.fields.put(field.getName(), field);
+	}
+                                      
+	public static Map<String, String[]> getParams(ServletRequest req){
+		HashMap<String,String[]> params = new HashMap<String,String[]>();
+		Enumeration<String> paramNames = req.getParameterNames();
+		if( paramNames == null ) return params;
+		while( paramNames.hasMoreElements() ){
+			String name = paramNames.nextElement();
+			String[] values = req.getParameterValues(name);
+			params.put(name, values);
+		}
+		return params;
+	}
+
+	public void bind(ServletRequest req){
+		bind( getParams(req) );
 	}
 
 	public void bind(Map<String, String[]> params){//{{{
@@ -76,5 +95,33 @@ public abstract class AbstractForm{
     // Integer, String, Float, Option, Boolean
 	
 	public FormErrors getErrors(){    return errors;  }
+
+	public boolean hasErrors(){
+		return this.getErrors().hasErrors();
+	}
+
+	public StringField string(String name){
+		StringField f = new StringField(name);
+		field(f);
+		return f; 
+	}
+
+	public StringField string(String name, String defaultValue){
+		StringField f = new StringField(name, defaultValue);
+		field(f);
+		return f; 
+	}
+
+	public IntegerField integer(String name){
+		IntegerField intf = new IntegerField(name);
+		field(intf);
+		return intf;
+	}
+
+	public IntegerField integer(String name, Integer defaultValue){
+		IntegerField intf = new IntegerField(name, defaultValue);
+		field(intf);
+		return intf;
+	}
 
 }

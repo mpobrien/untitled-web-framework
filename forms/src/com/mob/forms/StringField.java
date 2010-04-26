@@ -6,13 +6,15 @@ public class StringField extends AbstractFormField<String>{
 
     public StringField(String name){
         super(name);
-		//this.widget = new TextInputWidget(name, this);
+		this.widget = WidgetGenerator.text(this);
+		this.raw = "";
     }
 
     public StringField(String name, String defaultVal){//{{{
         super(name);
         this.value = defaultVal;
 		this.widget = WidgetGenerator.text(this);
+		this.raw = "";
     }//}}}
 
     @Override

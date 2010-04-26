@@ -1,4 +1,5 @@
 package com.mob.forms;
+import com.mob.forms.widgets.*;
 
 public class IntegerField extends AbstractFormField<Integer>{
 
@@ -6,11 +7,13 @@ public class IntegerField extends AbstractFormField<Integer>{
 
     public IntegerField(String name){
         super(name);
+		this.widget = WidgetGenerator.text(this);
     }
 
     public IntegerField(String name, Integer defaultVal){
         super(name);
         this.value = defaultVal;
+		this.widget = WidgetGenerator.text(this);
     }
 
     @Override

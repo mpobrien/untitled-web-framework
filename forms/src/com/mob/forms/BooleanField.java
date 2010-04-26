@@ -1,4 +1,5 @@
 package com.mob.forms;
+import com.mob.forms.widgets.*;
 
 public class BooleanField extends AbstractFormField<Boolean>{
 
@@ -11,6 +12,7 @@ public class BooleanField extends AbstractFormField<Boolean>{
     public BooleanField(String name, Boolean defaultVal){
         super(name);
         this.value = defaultVal;
+		this.widget = WidgetGenerator.checkbox(this);
     }
 
     @Override
