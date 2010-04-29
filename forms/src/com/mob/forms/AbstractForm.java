@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Enumeration;
 import javax.servlet.ServletRequest;
+import java.util.*;
 
 public abstract class AbstractForm{
 
@@ -13,6 +14,10 @@ public abstract class AbstractForm{
 
 	public AbstractFormField getField(String fieldName){
 		return fields.get( fieldName );
+	}
+
+	public Collection<AbstractFormField> getFields(){
+		return fields.values();
 	}
 
 	public void field(AbstractFormField field){

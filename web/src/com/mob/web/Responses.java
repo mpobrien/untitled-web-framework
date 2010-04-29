@@ -43,14 +43,14 @@ public class Responses{
 		}
 	}//}}}
 
-	public String reverseUrl(Class<? extends Controller> c1, String... groupArgs){
+	public String reverseUrl(Class<? extends Controller> c1, String... groupArgs){//{{{
 		return this.reverseMapper.reverseMatch(c1, groupArgs);
-	}
+	}//}}}
 
-	public String reverseUrl(Class<? extends Controller> c1, Map<String,String> urlArgs, String... groupArgs){
+	public String reverseUrl(Class<? extends Controller> c1, Map<String,String> urlArgs, String... groupArgs){//{{{
 		String baseUrl = reverseMapper.reverseMatch(c1, groupArgs);
 		return getFullUrl(baseUrl, urlArgs);
-	}
+	}//}}}
 
 	private static String getFullUrl(String baseUrl, Map<String,String> params){//{{{
         StringBuilder sb = new StringBuilder(baseUrl);
@@ -77,13 +77,17 @@ public class Responses{
 		return sb.toString();
 	}//}}}
 
-	public RedirectResponse reverseRedirect( Class<? extends Controller> c1, Map<String,String> urlArgs, String... groupArgs){
+	public RedirectResponse reverseRedirect( Class<? extends Controller> c1, Map<String,String> urlArgs, String... groupArgs){//{{{
 		String redirUrl = reverseUrl( c1, urlArgs, groupArgs);
 		return redirect( redirUrl );
-	}
+	}//}}}
 
-	public RedirectResponse reverseRedirect( Class<? extends Controller> c1, String... groupArgs){
+	public RedirectResponse reverseRedirect( Class<? extends Controller> c1, String... groupArgs){//{{{
 		return reverseRedirect( c1, null, groupArgs);
+	}//}}}
+
+	public JsonResponse json(Object o){
+		return new JsonResponse( o );
 	}
 
 }
