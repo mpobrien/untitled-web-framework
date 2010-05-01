@@ -3,6 +3,7 @@ import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.Map;
 import com.mob.forms.*;
+import com.google.common.collect.*;
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 public class WidgetGenerator{
@@ -95,8 +96,27 @@ public class WidgetGenerator{
 		}
 	}//}}}
 
-	public static String basicLabel(final AbstractFormField field){
+	public static String basicLabel(final AbstractFormField field){//{{{
 		return "<label for=\"" + escapeHtml(field.getName()) + "\">" + escapeHtml(getNiceName(field.getName())) + "</label>";
+	}//}}}
+
+	public static Widget selectOptions(final AbstractMultiFormField field){
+		return new Widget(){
+			public String getHtml(){
+				StringBuilder sb = new StringBuilder("<select name=\"" + escapeHtml(field.getName()) + "\">\n");
+				for(T option : field.getOptions() ){
+					MultiOption htmlOpt = new MultiOption( field.getFormVal(option),
+					                                       field.getFormName(option),
+					                                       field.getValue()!=null && field.getValue() == option );
+					sb.append( htmlOpt.getOptionHtml() );
+				}
+				sb.append("</select>");
+			}
+
+			public String getLabel(){
+				return basicLabel(field);
+			}
+		};
 	}
 
 }
