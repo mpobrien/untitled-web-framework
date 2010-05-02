@@ -2,6 +2,7 @@ package com.mob.forms.widgets;
 import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
 import com.mob.forms.*;
 import com.google.common.collect.*;
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
@@ -100,17 +101,26 @@ public class WidgetGenerator{
 		return "<label for=\"" + escapeHtml(field.getName()) + "\">" + escapeHtml(getNiceName(field.getName())) + "</label>";
 	}//}}}
 
-	public static Widget selectOptions(final AbstractMultiFormField field){
+	public static Widget selectOptions(final AbstractMultiFormField field){//{{{
 		return new Widget(){
 			public String getHtml(){
 				StringBuilder sb = new StringBuilder("<select name=\"" + escapeHtml(field.getName()) + "\">\n");
-				for(T option : field.getOptions() ){
-					MultiOption htmlOpt = new MultiOption( field.getFormVal(option),
-					                                       field.getFormName(option),
-					                                       field.getValue()!=null && field.getValue() == option );
-					sb.append( htmlOpt.getOptionHtml() );
+				Iterator<MultiOption> options = field.getHtmlOptions();
+
+				while( options.hasNext() ){
+					MultiOption option = options.next();
+					sb.append( option.getOptionHtml() ).append("\n");
 				}
-				sb.append("</select>");
+
+// TODO: sucks that this won't work, but we can't use the parameterized type here.
+// 				for(T option : field.getOptions() ){
+// 					MultiOption htmlOpt = new MultiOption( field.getFormVal(option),
+// 					                                       field.getFormName(option),
+// 					                                       field.getValue()!=null && field.getValue() == option );
+// 					sb.append( htmlOpt.getOptionHtml() );
+// 				}
+				sb.append("</select>\n");
+				return sb.toString();
 			}
 
 			public String getLabel(){
@@ -118,5 +128,6 @@ public class WidgetGenerator{
 			}
 		};
 	}
+//}}}
 
 }

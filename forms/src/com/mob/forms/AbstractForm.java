@@ -129,4 +129,16 @@ public abstract class AbstractForm{
 		return intf;
 	}
 
+	public EnumField choices(String name, Class<? extends Enum<?>> enumClass){//{{{
+		EnumField newField = new EnumField( name, enumClass );
+		field( newField );
+		return newField;
+	}//}}}
+
+	public SetField choices(String name, Set<String> choices){//{{{
+		SetField newField = new SetField( name, choices );
+		field( newField );
+		return newField;
+	}//}}}
+
 }

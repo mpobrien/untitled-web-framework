@@ -5,7 +5,7 @@ import java.util.Map;
 import com.mob.forms.*;
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
-class MultiOption{//{{{
+public class MultiOption{//{{{
 
 	private final String value;
 	private final String option;
@@ -30,7 +30,7 @@ class MultiOption{//{{{
 	public String getOptionHtml(){//{{{
 		return "<option value=\"" + escapeHtml(getValue()) + "\"" +
 			   (this.selected ? " selected>" : ">") + 
-			   escapeHtml(getValue()) + "</option>";
+			   escapeHtml(getOption()) + "</option>";
 	}//}}}
 
 }//}}}
