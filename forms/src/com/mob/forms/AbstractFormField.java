@@ -4,6 +4,7 @@ import java.util.*;
 
 public abstract class AbstractFormField<T>{
 
+	protected T value;
 	protected boolean required = true;
 	protected String raw = null;
 	protected Set<String> errors = new HashSet();
@@ -23,7 +24,16 @@ public abstract class AbstractFormField<T>{
 		return this.required;
 	}
 
-	public abstract void bind() throws BindValueException;
+	public void setRequired(boolean required){
+		this.required = required;
+	}
+
+	public void bind() throws BindValueException{
+		this.setValue( coerceValue(this.raw) );
+		if( this.required && this.getValue() == null ){
+			throw new BindValueException("This field is required.");
+		}
+	}
 
 	public void setRawValue(String raw){
 		this.raw = raw;
@@ -52,8 +62,14 @@ public abstract class AbstractFormField<T>{
 		this.widget = widget;
 	}
 
-    public abstract T getValue();
-    public abstract void setValue(T val);
+    public T getValue(){ return this.value; }
+    public void setValue(T val){
+		this.value = val;
+		this.raw = getFormVal(val);
+	}
+
+	public abstract String getFormVal(T val);
+	public abstract T coerceValue(String val);
 
 	//public abstract Widget getWidget();
 

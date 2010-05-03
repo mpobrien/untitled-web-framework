@@ -22,12 +22,12 @@ public class BooleanField extends AbstractFormField<Boolean>{
     public void setValue(Boolean val){ this.value = val; }
 
 	@Override
-	public void bind() throws BindValueException{//{{{
-		if( this.raw == null || this.raw.equals("") ){
-			setValue( false );
-		}else{
-			setValue( true );
-		}
-	}//}}}
+	public Boolean coerceValue(String val){
+		return val != null && !val.equals("");
+	}
+
+	public String getFormVal(Boolean val){
+		return  val != null && val.booleanValue() ? "on" : "";
+	}
     
 }

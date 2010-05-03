@@ -27,7 +27,7 @@ public class EnumField<T extends Enum<T>> extends AbstractMultiFormField<T>{
 				throw new BindValueException("This field is required.");
 			}
         }else{
-            this.setValue( lookupOption( this.raw ) );
+            this.setValue( coerceValue( this.raw ) );
             if( this.required && this.getValue() == null ){
                 throw new BindValueException("Invalid index to enum choices");
             }
@@ -50,7 +50,7 @@ public class EnumField<T extends Enum<T>> extends AbstractMultiFormField<T>{
     }
 
     @Override
-	public T lookupOption(String val){
+	public T coerceValue(String val){
         try{
             Integer index = new Integer(val);
             return this.enumClass.getEnumConstants()[index];

@@ -2,7 +2,6 @@ package com.mob.forms;
 import com.mob.forms.widgets.*;
 
 public class StringField extends AbstractFormField<String>{
-    private String value;
 
     public StringField(String name){
         super(name);
@@ -17,15 +16,19 @@ public class StringField extends AbstractFormField<String>{
 		this.raw = "";
     }//}}}
 
-    @Override
-    public String getValue(){ return this.value; }
-
-    @Override
-    public void setValue(String val){ this.value = val; }
-
 	@Override
 	public void bind(){//{{{
 		setValue( this.raw );
 	}//}}}
+
+	@Override
+	public String coerceValue(String val){
+		return val;
+	}
+
+	@Override
+	public String getFormVal(String val){
+		return val + "";
+	}
 
 }

@@ -19,21 +19,6 @@ public class SetField extends AbstractMultiFormField<String>{
     @Override
     public void setValue(String val){ this.value = val; }
 
-	@Override
-	public void bind() throws BindValueException{//{{{
-        if( this.raw == null ){
-			setValue( null );
-			if( this.required ){
-				throw new BindValueException("This field is required.");
-			}
-        }else{
-            this.setValue( lookupOption( this.raw ) );
-            if( this.required && this.getValue() == null ){
-                throw new BindValueException("Invalid index to enum choices");
-            }
-        }
-	}//}}}
-
     @Override
     public Iterator<String> getOptions(){//{{{
         return this.choices.iterator();
@@ -50,7 +35,7 @@ public class SetField extends AbstractMultiFormField<String>{
     }//}}}
 
     @Override
-	public String lookupOption(String val){//{{{
+	public String coerceValue(String val){//{{{
         try{
             if( this.choices.contains( val ) ) return val;
             else return null;
