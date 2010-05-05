@@ -10,11 +10,9 @@ public abstract class AbstractMultiFormField<T> extends AbstractFormField<T>{
 		this.widget = WidgetGenerator.selectOptions(this);
 	}
 
-	public abstract void bind() throws BindValueException;
     public abstract T getValue();
     public abstract void setValue(T val);
 	public abstract Iterator<T> getOptions();
-	public abstract T lookupOption(String val);
 	public abstract String getFormVal(T val);
 	public abstract String getFormName(T val);
 
