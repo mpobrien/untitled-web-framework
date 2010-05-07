@@ -2,6 +2,7 @@ package com.mob.forms.widgets;
 import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Iterator;
 import com.mob.forms.*;
 import com.google.common.collect.*;
@@ -13,12 +14,13 @@ public class WidgetGenerator{
 		return new Widget(){
 
 			public String getHtml(){
-				return "<input type=\"hidden\" name=\"" + escapeHtml(field.getName()) + "\" value=\"" + escapeHtml(field.getRawValue()) + "\"/>";
+				return "<input type=\"hidden\" name=\"" + escapeHtml(field.getName()) + "\" value=\"" + escapeHtml(field.getRawValue()) + "\"/>" + getErrorsHtml(field.getErrors());
 			}
 
 			public String getLabel(){
 				return basicLabel(field);
 			}
+			
 
 		};
 	}//}}}
@@ -28,7 +30,7 @@ public class WidgetGenerator{
 			public String getHtml(){
 				boolean checked = false;
 				if( field instanceof BooleanField) checked = ((BooleanField)field).getValue();
-				return "<input type=\"checkbox\" name=\"" + escapeHtml(field.getName()) + "\" value=\"on\"" + (checked?" checked":"") + "/>";
+				return "<input type=\"checkbox\" name=\"" + escapeHtml(field.getName()) + "\" value=\"on\"" + (checked?" checked":"") + "/>" + getErrorsHtml(field.getErrors()); 
 			}
 
 			public String getLabel(){
@@ -41,7 +43,7 @@ public class WidgetGenerator{
 	public static Widget text(final AbstractFormField field){//{{{ 
 		return new Widget(){ 
 			public String getHtml(){ 
-				return "<input type=\"text\" name=\"" + escapeHtml(field.getName()) + "\" value=\"" + escapeHtml(field.getRawValue() + "") + "\"/>"; 
+				return "<input type=\"text\" name=\"" + escapeHtml(field.getName()) + "\" value=\"" + escapeHtml(field.getRawValue() + "") + "\"/>" + getErrorsHtml(field.getErrors());  
 			} 
 			
 			public String getLabel(){ 
@@ -53,7 +55,9 @@ public class WidgetGenerator{
 	public static Widget password(final AbstractFormField field){//{{{
 		return new Widget(){
 			public String getHtml(){
-				return "<input type=\"password\" name=\"" + escapeHtml(field.getName()) + "\" value=\"" + escapeHtml(field.getRawValue()) + "\"/>";
+				// Don't repopulate with text
+				//return "<input type=\"password\" name=\"" + escapeHtml(field.getName()) + "\" value=\"" + escapeHtml(field.getRawValue()) + "\"/>"  + getErrorsHtml(field.getErrors());  
+				return "<input type=\"password\" name=\"" + escapeHtml(field.getName()) + "\" value=\"\"/>"  + getErrorsHtml(field.getErrors());  
 			}
 
 			public String getLabel(){
@@ -65,7 +69,7 @@ public class WidgetGenerator{
 	public static Widget textArea(final AbstractFormField field){//{{{
 		return new Widget(){
 			public String getHtml(){
-				return "<textarea name=\"" + escapeHtml(field.getName()) + "\">" + escapeHtml(field.getRawValue()) + "</textarea>";
+				return "<textarea name=\"" + escapeHtml(field.getName()) + "\">" + escapeHtml(field.getRawValue()) + "</textarea>" + getErrorsHtml(field.getErrors());   
 			}
 
 			public String getLabel(){
@@ -129,5 +133,15 @@ public class WidgetGenerator{
 		};
 	}
 //}}}
+
+	public static String getErrorsHtml(Set<String> errors){
+		if (errors == null || errors.isEmpty() ) return "";
+		StringBuilder result = new StringBuilder( "<ul class=\"errorlist\">" );
+		for( String error : errors ){
+			result.append("<li class=\"error\">" + error + "</li>");
+		}
+		result.append("</ul>");
+		return result.toString();
+	}
 
 }
