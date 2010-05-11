@@ -17,15 +17,10 @@ import java.io.*;
 public class AppConfigModule extends AbstractModule {
 	private static Logger log = Logger.getLogger(AppConfigModule.class);
 
-	private static final String TEMPLATE_PREFIX = "template.";
-	private static final String DB_PREFIX = "db.";
-	private static final String URLMAP_KEY = "controller.packages";
-	private static final String SERVERPORT_KEY = "server.port";
-	private static final String SERVERDATA_KEY = "server.data";
 	private final Properties propsFile;
 	private List<Package> packages;
 
-	public AppConfigModule(Package... pkgs){
+	public AppConfigModule(Package... pkgs){//{{{
 		// Load settings from the default location
 		Properties p = new Properties();
 		try{
@@ -36,9 +31,9 @@ public class AppConfigModule extends AbstractModule {
 		}
 		this.propsFile = p;
 		this.packages = Lists.newArrayList(pkgs);
-	}
+	}//}}}
 
-	public AppConfigModule(File propertiesFile, Package... pkgs){
+	public AppConfigModule(File propertiesFile, Package... pkgs){//{{{
 		this.propsFile = new Properties();
 		FileInputStream fis = null;
 		try{
@@ -53,15 +48,14 @@ public class AppConfigModule extends AbstractModule {
 			}
 		}
 		this.packages = Lists.newArrayList(pkgs);
-	}
+	}//}}}
 
-	public AppConfigModule(String propertiesFile){
+	public AppConfigModule(String propertiesFile){//{{{
 		this( new File( propertiesFile ) );
-	}
+	}//}}}
 
-	public void configure() {                           
-
-		//Template Settings//////////
+	public void configure() {                           //{{{
+		//Template Settings
 		Configuration config = new Configuration();
 		try{
 			config.setDirectoryForTemplateLoading( new File( this.propsFile.getProperty("template.dir" ) ) );
@@ -71,27 +65,25 @@ public class AppConfigModule extends AbstractModule {
 		}
 		bind(Configuration.class).toInstance( config );
 
-		//Database settings/////////////
-// 		Map<String,String> dbSettings = Maps.filterKeys( Maps.fromProperties(this.propsFile), C.prefixFilter( DB_PREFIX ) );
+		//Database settings
 		Names.bindProperties( binder(), Maps.fromProperties(this.propsFile) );
 		bind(ConnectionProvider.class).to(SimpleConnectionProvider.class);
+		
+		String contextProcessorsList = this.propsFile.getProperty("contextprocessors.classes");
+		bind( ContextProcessorChain.class ).toInstance( new ContextProcessorChain(contextProcessorsList) );
 
-// 		//Server settings:
-// 		bind(String.class).annotatedWith(Names.named("server.port")).toInstance(this.propsFile.getProperty(SERVERPORT_KEY));
-// 		bind(String.class).annotatedWith(Names.named("server.data")).toInstance(this.propsFile.getProperty(SERVERDATA_KEY));
-// 
 		// Url Mappings
 		bind(new TypeLiteral<List<Package>>() {}).annotatedWith( Names.named("controller.packages") ).toInstance( this.packages );
 
 		bind(ReverseMapper.class).to(AnnotatedUrlMapper.class);
 
-	}
+	}//}}}
 
 	public ImmutableMap<String,String> settings(){
 		return Maps.fromProperties(this.propsFile);
 	}
 
-	private static Properties loadProperties() throws Exception {
+	private static Properties loadProperties() throws Exception {//{{{
 		Properties properties = new Properties();
 		ClassLoader loader = AppConfigModule.class.getClassLoader();
 		URL url = loader.getResource("settings.properties");
@@ -101,6 +93,6 @@ public class AppConfigModule extends AbstractModule {
 		}
 		properties.load(url.openStream());
 		return properties;
-	}
+	}//}}}
 
 }

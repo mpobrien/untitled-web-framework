@@ -7,21 +7,24 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
 import org.apache.log4j.*;
+import com.google.common.collect.*;
 
 @Singleton
 public class SiteFilter implements Filter {
 	private static Logger log = Logger.getLogger(SiteFilter.class);
 	private final UrlMapper mapper;
 	private final Injector injector;
+	private final ContextProcessorChain contextProcessorChain;
 
   	@Inject
-	public SiteFilter(UrlMapper mapper, Injector injector){
+	public SiteFilter(UrlMapper mapper, Injector injector, ContextProcessorChain contexts){
 		this.mapper = mapper;
 		this.injector = injector;
+		this.contextProcessorChain = contexts;
 	}
 
-     public void init(FilterConfig filterConfig) throws ServletException {
-     }
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
 
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
@@ -31,12 +34,18 @@ public class SiteFilter implements Filter {
 		ControllerRequest controlRequest = this.mapper.matchUrl( requestUri ); 
 		boolean continueFilter = true;
 		if( controlRequest != null ){
+
+			for( Class<? extends ContextProcessor> contextClass : this.contextProcessorChain ){
+				ContextProcessor cp = (ContextProcessor)injector.getInstance(contextClass);
+				cp.process();
+			}
+
 			Class controllerClass = controlRequest.getControllerClass();
 			List<String> args = controlRequest.getArgs();
+
 			Controller controller = (Controller)injector.getInstance( controllerClass );
 			controller.setArgs( args );
 			controller.preprocess( request, response );
-			controller.setContext(); //TODO set up contexts here
 
 			WebResponse result;
 			if( request.getMethod().equals("GET") ){
@@ -44,7 +53,7 @@ public class SiteFilter implements Filter {
 			}else if( request.getMethod().equals("POST") ){
 				result = controller.post( request, response );
 			}else{
-				result = null; // TODO: unsupported method?
+				result = null; // TODO: unsupported method? log an error?
 			}
 	 
 			if( result != null ){
