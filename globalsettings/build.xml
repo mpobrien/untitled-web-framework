@@ -22,6 +22,11 @@
         </javac>
     </target>
     <target name="compile" depends="clean, build"> </target>
+    <target name="runserver">
+        <exec executable="./admin.sh">
+            <arg value="runserver"/>
+        </exec>
+    </target>
 
     <!--target name="runserver">
         <java classname="com.mob.bootstrap.Jetty">
