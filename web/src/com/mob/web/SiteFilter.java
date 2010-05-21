@@ -37,7 +37,7 @@ public class SiteFilter implements Filter {
 
 			for( Class<? extends ContextProcessor> contextClass : this.contextProcessorChain ){
 				ContextProcessor cp = (ContextProcessor)injector.getInstance(contextClass);
-				cp.process();
+				cp.process(request);
 			}
 
 			Class controllerClass = controlRequest.getControllerClass();

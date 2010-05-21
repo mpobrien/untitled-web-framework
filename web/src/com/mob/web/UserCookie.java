@@ -5,14 +5,13 @@ import com.google.inject.*;
 import com.google.inject.servlet.*;
 
 public class UserCookie{
-	private final String info;
 
-	public UserCookie(String info){
-		this.info = info;
-	}
+	private final String authString;
 
-	public String getUserInfo(){
-		return this.info;
-	}
+	public UserCookie(String authString){//{{{
+		this.authString = authString;
+	}//}}}
+
+	public String getAuthString(){ return this.authString; }
 
 }
