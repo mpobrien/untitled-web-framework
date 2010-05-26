@@ -5,6 +5,6 @@ import com.google.inject.*;
 
 public abstract class ContextProcessor{
 
-	public abstract void process(HttpServletRequest request);
+	public abstract void process(HttpServletRequest request, HttpServletResponse response);
 
 }

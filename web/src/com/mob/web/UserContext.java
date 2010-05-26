@@ -13,7 +13,7 @@ public class UserContext extends ContextProcessor {
     private SiteUser user = new AnonymousUser(); 
 
     @Override
-	public void process(HttpServletRequest request){
+	public void process(HttpServletRequest request, HttpServletResponse response){
 		Cookie[] cookies = request.getCookies();
 		if( cookies == null || cookies.length == 0 ){
 			return;

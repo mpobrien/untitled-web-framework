@@ -7,52 +7,25 @@ import java.io.UnsupportedEncodingException;
 import javax.servlet.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-
 import org.apache.log4j.Logger;
 
-public class SessionMessage{
+public class Flash{
 
-	private static Logger log = Logger.getLogger( SessionMessage.class.getName() );
+	private static final Logger log = Logger.getLogger( Flash.class );
 	public static final String FLASH_REQ_KEY = "FLASH";
 	public static final String FLASH_SESSION_PREFIX  = "FLS_";
 	public static final String FLASH_PREFIX = "FL_";
-
-	private HttpServletRequest request;
-	private HttpServletResponse response;
+	private HttpServletRequest request = null;
+	private HttpServletResponse response = null;
 	private Map<String,String> flashMap;
 
-	public static SessionMessage getInstance( HttpServletRequest request, HttpServletResponse response ) {
-		SessionMessage flash = (SessionMessage)request.getAttribute( FLASH_REQ_KEY );
-		if ( flash == null ) {
-			flash = new SessionMessage( request, response );
-			request.setAttribute( FLASH_REQ_KEY, flash );
-		}
-		return flash;
-	}
-
-
-	protected SessionMessage( HttpServletRequest request, HttpServletResponse response ) {
-		this.request  = request;
+	public Flash(HttpServletRequest request, HttpServletResponse response){
+		this.request = request;
 		this.response = response;
 		this.flashMap = new HashMap<String,String>();
 		consumeCookies();
+
 	}
-
-
-	public void consumeCookies() {//{{{
-		Cookie[] cookies = request.getCookies();
-		if ( cookies != null ) {
-			for ( Cookie cookie : cookies ) {
-				if ( cookie.getName().startsWith( FLASH_PREFIX ) ||
-					 cookie.getName().startsWith( FLASH_SESSION_PREFIX ) ) {
-					// read in the cookie and trash it
-					parseCookie( cookie );
-					if ( cookie.getName().startsWith( FLASH_PREFIX ) )
-						zapCookie( cookie );
-				}
-			}
-		}
-	}//}}}
 
 	private void parseCookie( Cookie cookie ) {//{{{
 		// get the cookie name
@@ -126,7 +99,6 @@ public class SessionMessage{
 		}
 	}//}}}
 
-
 	private void setCookie( String key, String mesg, String path, boolean keep, int expiry ) {//{{{
 		String value = null;
 		// get a sig to prevent tampering (probably overkill)
@@ -167,16 +139,6 @@ public class SessionMessage{
 		response.addCookie( cookie );
 	}//}}}
 
-	public String get( String key ) {
-		return flashMap.get( key );
-	}
-
-	public SessionMessage put( String key, String mesg ) {
-		flashMap.put( key, mesg );
-		setCookie( key, mesg, null, false, -1 );
-		return this;
-	}
-
 	private void zapCookie( Cookie cookie ) {//{{{
 		Cookie newCookie = new Cookie( cookie.getName(), "" );
 		newCookie.setPath( "/" );
@@ -185,16 +147,30 @@ public class SessionMessage{
 		response.addCookie( newCookie );
 	}//}}}
 
-	private static String hex(byte[] array) {
+	public void consumeCookies() {//{{{
+		Cookie[] cookies = this.request.getCookies();
+		if ( cookies != null ) {
+			for ( Cookie cookie : cookies ) {
+				if ( cookie.getName().startsWith( FLASH_PREFIX ) ||
+					 cookie.getName().startsWith( FLASH_SESSION_PREFIX ) ) {
+					// read in the cookie and trash it
+					parseCookie( cookie );
+					if ( cookie.getName().startsWith( FLASH_PREFIX ) )
+						zapCookie( cookie );
+				}
+			}
+		}
+	}//}}}
+
+	private static String hex(byte[] array) {//{{{
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < array.length; ++i) {
 			sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).toUpperCase().substring(1, 3));
 		}
 		return sb.toString();
-	}
+	}//}}}
 
-
-	public static String md5(String message){
+	public static String md5(String message){//{{{
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			return hex(md.digest(message.getBytes("CP1252")));
@@ -202,8 +178,16 @@ public class SessionMessage{
 		} catch (UnsupportedEncodingException e) {
 		}
 		return null;
-	}
+	}//}}}
 
+	public void put( String key, String mesg ) {//{{{
+		flashMap.put( key, mesg );
+		setCookie( key, mesg, null, false, -1 );
+	}//}}}
+
+	public String get( String key ) {
+		return flashMap.get( key );
+	}
 
 }
 
