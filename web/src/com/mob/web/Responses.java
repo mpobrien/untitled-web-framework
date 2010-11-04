@@ -1,6 +1,7 @@
 package com.mob.web;
-import freemarker.core.*;
-import freemarker.template.*;
+// import freemarker.core.*;
+// import freemarker.template.*;
+import org.mob.templ8.*;
 import java.util.Map;
 import java.util.Iterator;
 import com.google.inject.Inject;
@@ -9,13 +10,13 @@ import java.io.UnsupportedEncodingException;
 
 public class Responses{
 
-	private Configuration config;
+	private TemplateLoader templateLoader;
+	//private Configuration config;
 	private ReverseMapper reverseMapper;
 
 	@Inject
-	public Responses(Configuration config, ReverseMapper reverseMapper){//{{{
-		this.config = config;
-		this.config.setObjectWrapper( ObjectWrapper.BEANS_WRAPPER );
+	public Responses(TemplateLoader templateLoader, ReverseMapper reverseMapper){//{{{
+		this.templateLoader = templateLoader;
 		this.reverseMapper = reverseMapper;
 	}//}}}
 
@@ -25,7 +26,7 @@ public class Responses{
 
 	public TemplateResponse render(String templateName, Map context){//{{{
 		try{
-			Template template = config.getTemplate(templateName);  
+			Template template = templateLoader.getTemplate(templateName);  
 			return new TemplateResponse( template, context);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -35,7 +36,7 @@ public class Responses{
 
 	public TemplateResponse render(String templateName){//{{{
 		try{
-			Template template = config.getTemplate(templateName);  
+			Template template = templateLoader.getTemplate(templateName);  
 			return new TemplateResponse( template );
 		}catch(Exception e){
 			e.printStackTrace();

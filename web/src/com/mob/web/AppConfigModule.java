@@ -4,9 +4,10 @@ import com.google.common.base.*;
 import com.google.common.collect.*;
 import com.google.inject.*;
 import com.google.inject.name.Names;
-import freemarker.core.*;
-import freemarker.template.*;
+// import freemarker.core.*;
+// import freemarker.template.*;
 import org.apache.log4j.*;
+import org.mob.templ8.*;
 import java.util.Properties;
 import java.util.Map;
 import java.util.List;
@@ -56,14 +57,17 @@ public class AppConfigModule extends AbstractModule {
 
 	public void configure() {                           //{{{
 		//Template Settings
-		Configuration config = new Configuration();
+		//Configuration config = new Configuration();
+
+		TemplateLoader templateLoader = new TemplateLoader();
 		try{
-			config.setDirectoryForTemplateLoading( new File( this.propsFile.getProperty("template.dir" ) ) );
+			File templatePathDir = new File( this.propsFile.getProperty("template.dir" ) );
+			templateLoader.setRootDirectory(templatePathDir.getAbsolutePath()); // TODO make sure this works ok.
 		}catch(Exception e){
 			e.printStackTrace();
 			log.warn("couldn't load template directory");
 		}
-		bind(Configuration.class).toInstance( config );
+		bind(TemplateLoader.class).toInstance( templateLoader );
 
 		//Database settings
 		Names.bindProperties( binder(), Maps.fromProperties(this.propsFile) );
