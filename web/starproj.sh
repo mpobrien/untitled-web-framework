@@ -24,6 +24,7 @@ cp $global_settings_dir/MyServletContextListener.java $projectname/src/$projectn
 cp $global_settings_dir/MainServletModule.java $projectname/src/$projectname/modules
 cp $global_settings_dir/web.xml $projectname/WebContent/WEB-INF
 cp $global_settings_dir/admin.sh $projectname/
+cp $global_settings_dir/index.html $projectname/templates
 
 sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/build.xml 
 sed -i "s/!!!PROJECT_NAME!!!/$projectname/g" $projectname/src/$projectname/ctrlrs/HomeController.java

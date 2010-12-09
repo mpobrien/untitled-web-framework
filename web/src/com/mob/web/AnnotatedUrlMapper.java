@@ -60,6 +60,10 @@ public class AnnotatedUrlMapper implements UrlMapper, ReverseMapper{
 		return null; //no match found.
 	}//}}}
 
+	public Map<java.util.regex.Matcher,Class<? extends Controller>> getMappings(){
+		return this.mappings;
+	}
+
     public String toString(){
 		return "AnnotatedUrlMapper -mappings: " + mappings.toString();
 	}

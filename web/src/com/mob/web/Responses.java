@@ -7,6 +7,7 @@ import java.util.Iterator;
 import com.google.inject.Inject;
 import java.net.*;
 import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
 public class Responses{
 
@@ -24,14 +25,20 @@ public class Responses{
 		return new RedirectResponse( redirectUrl );
 	}//}}}
 
-	public TemplateResponse render(String templateName, Map context){//{{{
+	public WebResponse render(String templateName, Map context){//{{{
 		try{
 			Template template = templateLoader.getTemplate(templateName);  
 			return new TemplateResponse( template, context);
-		}catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
+ 		}catch(CompileError ce){
+			String message = ce.getMessage();
+			StringBuilder output = new StringBuilder();
+			output.append("<html><body><div>line " + ce.getNode().getLineNumber());
+			output.append(": <b>" + message + "</b></div></body></html>");
+			return new StringWebResponse(output.toString());
+ 		}catch(IOException e){
+ 			e.printStackTrace();
+ 			return null;
+ 		}
 	}//}}}
 
 	public TemplateResponse render(String templateName){//{{{
@@ -90,5 +97,10 @@ public class Responses{
 	public JsonResponse json(Object o){
 		return new JsonResponse( o );
 	}
+
+	public JsonResponse json(Object o, String... fieldNames){
+		return new JsonResponse( o, fieldNames );
+	}
+
 
 }
